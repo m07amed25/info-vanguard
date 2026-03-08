@@ -35,9 +35,9 @@ export default function Home() {
         <WhyUs />
         <Stats />
         <Features />
-        <Pricing />
+        {/* <Pricing /> */}
         <Testimonials />
-        <Blog />
+        {/* <Blog /> */}
         <FAQ />
         <Contact />
       </main>
