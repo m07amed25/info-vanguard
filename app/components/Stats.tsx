@@ -25,9 +25,6 @@ const easings: Record<string, EasingFunction> = {
   },
 };
 
-/**
- * Number format types
- */
 export type NumberFormat =
   | "number"
   | "decimal"
@@ -35,51 +32,26 @@ export type NumberFormat =
   | "percentage"
   | "compact";
 
-/**
- * Individual stat item interface
- */
 export interface StatItem {
-  /** The numerical value to animate to */
   value: number;
-  /** Label describing the stat */
   label: string;
-  /** Animation duration in milliseconds */
   duration?: number;
-  /** Easing function name or custom function */
   easing?: string | EasingFunction;
-  /** Number format type */
   format?: NumberFormat;
-  /** Decimal places for formatted numbers */
   decimals?: number;
-  /** Prefix symbol (e.g., "$", "+") */
   prefix?: string;
-  /** Suffix symbol (e.g., "%", "K") */
   suffix?: string;
-  /** Whether animation should repeat when scrolled into view again */
   repeat?: boolean;
-  /** Custom icon component or element */
   icon?: ReactNode;
 }
-
-/**
- * Stats component props
- */
 export interface StatsProps {
-  /** Array of stat items to display */
   stats?: StatItem[];
-  /** HTML element type for the container */
   as?: ElementType;
-  /** Additional CSS class name */
   className?: string;
-  /** Section title */
   title?: string;
-  /** Whether to enable animations (default: true) */
   animate?: boolean;
-  /** Gap between stat cards */
   gap?: string | number;
-  /** Number of columns on desktop */
   columns?: number;
-  /** Custom aria-label for the section */
   "aria-label"?: string;
 }
 
@@ -96,7 +68,7 @@ interface AnimatedCounterProps {
 
 function AnimatedCounter({
   targetValue,
-  duration = 2000,
+  duration = 3000,
   easing = "easeOutCubic",
   format = "number",
   decimals = 0,

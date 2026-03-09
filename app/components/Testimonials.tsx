@@ -1,5 +1,86 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
+
+interface AnimatedCounterProps {
+  targetValue: number;
+  duration?: number;
+  format?: "number" | "decimal" | "percentage" | "compact";
+  suffix?: string;
+  enabled?: boolean;
+}
+
+function AnimatedCounter({
+  targetValue,
+  duration = 5000,
+  format = "number",
+  suffix = "",
+  enabled = true,
+}: AnimatedCounterProps) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const animationRef = useRef<number | null>(null);
+  const hasAnimatedRef = useRef(false);
+
+  useEffect(() => {
+    if (!enabled || hasAnimatedRef.current) {
+      if (!enabled) setDisplayValue(targetValue);
+      return;
+    }
+
+    hasAnimatedRef.current = true;
+
+    let startTime: number | null = null;
+
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+      const currentValue = easedProgress * targetValue;
+
+      setDisplayValue(currentValue);
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(targetValue);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [enabled, targetValue, duration]);
+
+  const formatValue = (value: number): string => {
+    switch (format) {
+      case "decimal":
+        return value.toFixed(1);
+      case "percentage":
+        return value.toFixed(1);
+      case "compact":
+        if (value >= 1000000) return `${(value / 1000000).toFixed(0)}M`;
+        if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+        return value.toFixed(0);
+      case "number":
+      default:
+        return Math.round(value).toLocaleString("en-US");
+    }
+  };
+
+  return (
+    <span aria-live="polite">
+      {formatValue(displayValue)}
+      {suffix}
+    </span>
+  );
+}
 
 interface Testimonial {
   id: number;
@@ -47,7 +128,7 @@ const testimonials: Testimonial[] = [
     content:
       "I've evaluated dozens of security solutions. Vanguard's static-first approach is revolutionary. It detects malware without executing it - a game-changer for proactive security.",
     rating: 5,
-  }
+  },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -76,10 +157,12 @@ export function Testimonials() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const controls = useAnimation();
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
+      setIsVisible(true);
     }
   }, [isInView, controls]);
 
@@ -248,10 +331,30 @@ export function Testimonials() {
             }}
           >
             {[
-              { number: "500K+", label: "Active Users" },
-              { number: "99.9%", label: "Detection Rate" },
-              { number: "150+", label: "Countries" },
-              { number: "24/7", label: "Support" },
+              {
+                value: 500000,
+                format: "compact" as const,
+                suffix: "+",
+                label: "Active Users",
+              },
+              {
+                value: 99.9,
+                format: "percentage" as const,
+                suffix: "",
+                label: "Detection Rate",
+              },
+              {
+                value: 150,
+                format: "number" as const,
+                suffix: "+",
+                label: "Countries",
+              },
+              {
+                value: 24,
+                format: "number" as const,
+                suffix: "/7",
+                label: "Support",
+              },
             ].map((stat, index) => (
               <div key={index}>
                 <div
@@ -262,7 +365,13 @@ export function Testimonials() {
                     marginBottom: "0.25rem",
                   }}
                 >
-                  {stat.number}
+                  <AnimatedCounter
+                    targetValue={stat.value}
+                    duration={5000}
+                    format={stat.format}
+                    suffix={stat.suffix}
+                    enabled={isVisible}
+                  />
                 </div>
                 <div
                   style={{
