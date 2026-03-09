@@ -139,9 +139,13 @@ export function FAQ() {
                   style={{
                     fontSize: "1rem",
                     fontWeight: 500,
-                    color: "var(--color-text)",
+                    color:
+                      openIndex === index
+                        ? "var(--color-accent)"
+                        : "var(--color-text)",
                     flex: 1,
                     paddingRight: "1rem",
+                    transition: "color 0.3s ease",
                   }}
                 >
                   {item.question}
@@ -172,10 +176,19 @@ export function FAQ() {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     style={{ overflow: "hidden" }}
                   >
+                    {/* Divider between question and answer */}
+                    <div
+                      style={{
+                        height: "1px",
+                        background: "var(--color-border)",
+                        margin: "0 1.5rem",
+                      }}
+                      aria-hidden="true"
+                    />
                     <div
                       className="faq-accordion-answer"
                       style={{
-                        padding: "0 1.5rem 1.5rem",
+                        padding: "1.5rem 1.5rem 1.5rem",
                         color: "var(--color-text-muted)",
                         lineHeight: 1.7,
                       }}
