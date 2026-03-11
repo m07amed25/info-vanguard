@@ -31,9 +31,9 @@ export function About() {
             visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
           style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
-            margin: "0 0 50px",
+            marginBlockEnd: "3rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
             position: "relative",
@@ -55,8 +55,8 @@ export function About() {
           }}
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "4rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))",
+            gap: "clamp(2rem, 5vw, 4rem)",
             alignItems: "center",
           }}
         >
@@ -64,11 +64,11 @@ export function About() {
             <p
               className="about-lead"
               style={{
-                fontSize: "1.25rem",
+                fontSize: "1.05rem",
                 fontWeight: 500,
                 color: "var(--color-text)",
-                marginBottom: "1.5rem",
-                lineHeight: 1.6,
+                marginBottom: "1.25rem",
+                lineHeight: 1.65,
               }}
             >
               Vanguard is a next-generation antivirus built with the
@@ -159,11 +159,25 @@ export function About() {
       <style>{`
         @media (max-width: 768px) {
           .about-inner {
-            grid-template-columns: 1fr !important;
-            gap: 2rem !important;
+            gap: 1.5rem !important;
           }
           .about-visual {
-            order: -1;
+            max-width: 220px !important;
+            width: 100% !important;
+            margin: 1rem auto 0 !important;
+            height: auto !important;
+          }
+          .about-logo-img {
+            width: 100% !important;
+            height: auto !important;
+            min-height: 100px; /* fallback against collapse */
+          }
+          .about-list li {
+            font-size: 0.95rem;
+          }
+          .about-lead {
+            font-size: 1rem !important;
+            margin-bottom: 1rem !important;
           }
         }
       `}</style>

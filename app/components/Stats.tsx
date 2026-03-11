@@ -164,10 +164,11 @@ function AnimatedCounter({
       className="stats-number"
       style={{
         display: "block",
-        fontSize: "2.5rem",
+        fontSize: "clamp(2rem, 4vw, 3rem)",
         fontWeight: 700,
         color: "var(--color-text)",
         marginBottom: "0.75rem",
+        lineHeight: 1.1,
       }}
     >
       {prefix}
@@ -192,12 +193,12 @@ function StatCard({ stat, index, animate, isVisible }: StatCardProps) {
       className="stats-box"
       style={{
         textAlign: "center",
-        padding: "2.5rem 2rem",
+        padding: "clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 2rem)",
         background: "var(--color-bg-card)",
         borderRadius: "var(--radius-lg)",
         border: "1px solid var(--color-border)",
         flex: "1 1 0",
-        minWidth: "280px",
+        minWidth: "clamp(220px, 28vw, 280px)",
         maxWidth: "400px",
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? "translateY(0)" : "translateY(30px)",
@@ -322,6 +323,14 @@ export function Stats({
           background-color: rgba(10, 12, 10, 0.88);
           z-index: 0;
         }
+        @media (max-width: 768px) {
+          .stats-grid {
+            gap: 1.5rem !important;
+          }
+          .stats-box {
+            padding: 1.5rem 1rem !important;
+          }
+        }
       `}</style>
       <Component
         id="problem"
@@ -350,9 +359,9 @@ export function Stats({
             <h2
               className="section-title main-heading"
               style={{
-                fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+                fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
                 fontWeight: 600,
-                margin: "0 auto 4rem",
+                margin: "0 auto 3rem",
                 color: "var(--color-text)",
                 textAlign: "center",
                 position: "relative",
@@ -366,6 +375,7 @@ export function Stats({
           )}
 
           <div
+            className="stats-grid"
             style={{
               display: "flex",
               justifyContent: "center",
@@ -383,8 +393,8 @@ export function Stats({
               <div
                 key={index}
                 style={{
-                  flex: `1 1 calc(${100 / columns}% - ${typeof gap === "number" ? gap : parseInt(gap) || 24}px)`,
-                  minWidth: "280px",
+                  flex: `1 1 calc(${100 / columns}% - ${typeof gap === "number" ? gap : parseInt(gap as string) || 24}px)`,
+                  minWidth: "min(100%, 280px)",
                   maxWidth: "400px",
                 }}
               >

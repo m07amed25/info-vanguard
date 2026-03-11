@@ -13,15 +13,33 @@ export function Hero() {
       role="region"
       aria-labelledby="hero-heading"
       style={{
-        minHeight: "100vh",
+        minHeight: "100svh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        paddingBlockStart: "4rem",
+        paddingBlockStart: "clamp(3.5rem, 10vh, 5rem)",
+        paddingBlockEnd: "clamp(2rem, 5vh, 4rem)",
         overflow: "hidden",
         position: "relative",
       }}
     >
+      <style>{`
+        @media (max-width: 480px) {
+          .hero-cta {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1rem !important;
+          }
+          .hero-cta .btn {
+            width: 100% !important;
+            min-height: 52px !important;
+          }
+          .scroll-hint {
+            display: none !important;
+          }
+        }
+      `}</style>
       <motion.div
         style={{
           position: "absolute",
@@ -92,11 +110,11 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           style={{
-            fontSize: "clamp(2rem, 8vw, 4.5rem)",
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 700,
-            lineHeight: 1.1,
+            lineHeight: 1.15,
             letterSpacing: "-0.03em",
-            margin: "0 0 1.5rem",
+            margin: "0 0 1.25rem",
           }}
         >
           <span className="line" style={{ display: "block" }}>
@@ -119,12 +137,12 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           style={{
-            fontSize: "clamp(1rem, 3vw, 1.5rem)",
+            fontSize: "clamp(0.95rem, 1.5vw, 1.1rem)",
             color: "var(--color-text-muted)",
-            maxWidth: "clamp(280px, 90vw, 480px)",
+            maxWidth: "clamp(280px, 85vw, 480px)",
             marginInline: "auto",
-            marginBlockEnd: "3rem",
-            lineHeight: 1.6,
+            marginBlockEnd: "2.5rem",
+            lineHeight: 1.7,
           }}
         >
           Next-gen antivirus built with AI — real-time threat detection,
@@ -138,10 +156,11 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           style={{
             display: "flex",
-            gap: "clamp(0.5rem, 2vw, 1rem)",
+            gap: "clamp(0.75rem, 2vw, 1rem)",
             justifyContent: "center",
             flexWrap: "wrap",
-            marginBlockStart: "2rem",
+            marginBlockStart: "2.5rem",
+            width: "100%",
           }}
         >
           <a
@@ -151,9 +170,9 @@ export function Hero() {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: "0.75rem 1.5rem",
-              fontSize: "clamp(0.875rem, 2vw, 0.95rem)",
-              fontWeight: 500,
+              padding: "0.875rem 2rem",
+              fontSize: "clamp(0.875rem, 1.5vw, 1rem)",
+              fontWeight: 600,
               borderRadius: "var(--radius)",
               background: "var(--color-accent)",
               color: "#fff",
@@ -161,7 +180,8 @@ export function Hero() {
               border: "none",
               cursor: "pointer",
               transition: "background 0.2s ease",
-              minHeight: "44px",
+              minHeight: "48px",
+              letterSpacing: "0.01em",
             }}
           >
             Get Vanguard
@@ -173,8 +193,8 @@ export function Hero() {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              padding: "0.75rem 1.5rem",
-              fontSize: "clamp(0.875rem, 2vw, 0.95rem)",
+              padding: "0.875rem 2rem",
+              fontSize: "clamp(0.875rem, 1.5vw, 1rem)",
               fontWeight: 500,
               borderRadius: "var(--radius)",
               background: "transparent",
@@ -183,7 +203,7 @@ export function Hero() {
               border: "1px solid var(--color-border)",
               cursor: "pointer",
               transition: "0.2s ease",
-              minHeight: "44px",
+              minHeight: "48px",
             }}
           >
             See how it works

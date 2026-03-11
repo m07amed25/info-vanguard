@@ -97,9 +97,9 @@ export function Features() {
             visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
           style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
-            marginBlockEnd: "3rem",
+            marginBlockEnd: "2.5rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
             position: "relative",
@@ -187,6 +187,28 @@ export function Features() {
             @media (max-width: 1024px) {
               .features-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
+              }
+            }
+            @media (max-width: 768px) {
+              .our-work-filters {
+                flex-wrap: nowrap !important;
+                justify-content: flex-start !important;
+                overflow-x: auto;
+                padding-bottom: 0.5rem !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+              }
+              .our-work-filters::-webkit-scrollbar {
+                display: none;
+              }
+              .our-work-filters li {
+                flex-shrink: 0;
+              }
+              .feature-card {
+                min-height: 200px !important;
+              }
+              .feature-card-body {
+                padding: 1.25rem 1rem !important;
               }
             }
             @media (max-width: 640px) {

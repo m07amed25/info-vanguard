@@ -72,9 +72,9 @@ export function Contact() {
           id="contact-heading"
           className="main-heading"
           style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
-            marginBlockEnd: "3rem",
+            marginBlockEnd: "2rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
             color: "var(--color-text)",
@@ -85,11 +85,11 @@ export function Contact() {
 
         <p
           style={{
-            fontSize: "clamp(1rem, 2vw, 1.1rem)",
+            fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
             color: "var(--color-text-muted)",
-            maxWidth: "clamp(280px, 90vw, 560px)",
+            maxWidth: "clamp(280px, 90vw, 520px)",
             marginInline: "auto",
-            marginBlockEnd: "3rem",
+            marginBlockEnd: "2rem",
             textAlign: "center",
           }}
         >
@@ -185,7 +185,7 @@ export function Contact() {
                 inputMode="email"
                 style={{
                   width: "100%",
-                  padding: "1rem 1.25rem",
+                  padding: "clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.25rem)",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
                   background: "var(--color-bg)",
@@ -220,7 +220,7 @@ export function Contact() {
                 autoComplete="off"
                 style={{
                   width: "100%",
-                  padding: "1rem 1.25rem",
+                  padding: "clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.25rem)",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
                   background: "var(--color-bg)",
@@ -257,7 +257,7 @@ export function Contact() {
                 placeholder="Your question or message..."
                 style={{
                   width: "100%",
-                  padding: "1rem 1.25rem",
+                  padding: "clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.25rem)",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
                   background: "var(--color-bg)",

@@ -55,9 +55,9 @@ export function WhyUs() {
             visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
           style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
-            marginBlockEnd: "3rem",
+            marginBlockEnd: "2.5rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
             position: "relative",
@@ -92,7 +92,7 @@ export function WhyUs() {
                 background: "var(--color-bg-card)",
                 borderRadius: "var(--radius-lg)",
                 border: "1px solid var(--color-border)",
-                padding: "clamp(1.5rem, 4vw, 2rem)",
+                padding: "clamp(1.25rem, 4vw, 2rem)",
                 position: "relative",
                 overflow: "hidden",
               }}
@@ -104,7 +104,7 @@ export function WhyUs() {
                   color: "var(--color-accent)",
                   opacity: 0.3,
                   position: "absolute",
-                  top: "0.5rem",
+                  top: "0.25rem",
                   insetInlineEnd: "0.5rem",
                   fontFamily: "var(--font-gargoyles)",
                   lineHeight: 1,

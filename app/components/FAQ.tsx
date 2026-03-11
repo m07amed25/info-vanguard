@@ -67,9 +67,9 @@ export function FAQ() {
           <h2
             className="main-heading"
             style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
               fontWeight: 600,
-              margin: "0 0 50px",
+              marginBlockEnd: "3rem",
               letterSpacing: "-0.02em",
               textAlign: "center",
               position: "relative",
@@ -80,10 +80,10 @@ export function FAQ() {
           <p
             className="section-lead"
             style={{
-              fontSize: "1.1rem",
+              fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
               color: "var(--color-text-muted)",
-              maxWidth: "560px",
-              margin: "0 auto 3rem",
+              maxWidth: "520px",
+              margin: "0 auto 2.5rem",
               textAlign: "center",
             }}
           >
@@ -124,12 +124,16 @@ export function FAQ() {
                 onClick={() => toggleItem(index)}
                 style={{
                   width: "100%",
-                  padding: "1.25rem 1.5rem",
+                  padding: "clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 1.5rem)",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   background: "transparent",
                   border: "none",
+                  color: "var(--color-text)",
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "1.125rem",
+                  fontWeight: 600,
                   cursor: "pointer",
                   textAlign: "left",
                 }}
@@ -188,9 +192,9 @@ export function FAQ() {
                     <div
                       className="faq-accordion-answer"
                       style={{
-                        padding: "1.5rem 1.5rem 1.5rem",
+                        padding: "0 clamp(1rem, 4vw, 1.5rem) clamp(1rem, 3vw, 1.25rem)",
                         color: "var(--color-text-muted)",
-                        lineHeight: 1.7,
+                        lineHeight: 1.6,
                       }}
                       dangerouslySetInnerHTML={{ __html: item.answer }}
                     />

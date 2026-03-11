@@ -114,9 +114,9 @@ export function Pricing() {
             visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
           style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
-            marginBlockEnd: "3rem",
+            marginBlockEnd: "2.5rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
             position: "relative",

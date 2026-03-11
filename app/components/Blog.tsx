@@ -120,9 +120,9 @@ export function Blog() {
           <h2
             className="main-heading"
             style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
               fontWeight: 600,
-              margin: "0 0 1rem",
+              margin: "0 0 0.75rem",
               letterSpacing: "-0.02em",
               textAlign: "center",
             }}
@@ -131,9 +131,9 @@ export function Blog() {
           </h2>
           <p
             style={{
-              fontSize: "1.1rem",
+              fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
               color: "var(--color-text-muted)",
-              maxWidth: "560px",
+              maxWidth: "520px",
               margin: "0 auto 2rem",
             }}
           >
@@ -182,8 +182,8 @@ export function Blog() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-            gap: "2rem",
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))",
+            gap: "clamp(1.25rem, 3vw, 2rem)",
           }}
         >
           <AnimatePresence mode="popLayout">

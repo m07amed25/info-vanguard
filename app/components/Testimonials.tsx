@@ -119,16 +119,7 @@ const testimonials: Testimonial[] = [
     content:
       "As a small business, we can't afford a full security team. Vanguard gives us enterprise-grade protection at a fraction of the cost. The password manager and VPN integration are lifesavers.",
     rating: 5,
-  },
-  {
-    id: 4,
-    name: "David Park",
-    role: "Security Analyst",
-    company: "CyberDefense Systems",
-    content:
-      "I've evaluated dozens of security solutions. Vanguard's static-first approach is revolutionary. It detects malware without executing it - a game-changer for proactive security.",
-    rating: 5,
-  },
+  }
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -189,9 +180,9 @@ export function Testimonials() {
           <h2
             className="main-heading"
             style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
               fontWeight: 600,
-              margin: "0 0 1rem",
+              margin: "0 0 0.75rem",
               letterSpacing: "-0.02em",
               textAlign: "center",
             }}
@@ -200,9 +191,9 @@ export function Testimonials() {
           </h2>
           <p
             style={{
-              fontSize: "1.1rem",
+              fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
               color: "var(--color-text-muted)",
-              maxWidth: "560px",
+              maxWidth: "520px",
               margin: "0 auto",
             }}
           >
@@ -214,8 +205,8 @@ export function Testimonials() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-            gap: "2rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
+            gap: "clamp(1.25rem, 3vw, 2rem)",
           }}
         >
           {testimonials.map((testimonial, index) => (
@@ -231,11 +222,16 @@ export function Testimonials() {
                 },
               }}
               style={{
-                padding: "2rem",
-                background: "var(--color-bg-card)",
+                padding: "clamp(1.25rem, 4vw, 2rem)",
                 borderRadius: "var(--radius-lg)",
+                backgroundColor: "var(--color-bg-card)",
                 border: "1px solid var(--color-border)",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem",
+                height: "100%",
+                position: "relative",
+                overflow: "hidden",
               }}
             >
               <div style={{ marginBottom: "1rem" }}>
@@ -359,7 +355,7 @@ export function Testimonials() {
               <div key={index}>
                 <div
                   style={{
-                    fontSize: "2rem",
+                    fontSize: "clamp(1.5rem, 3vw, 2rem)",
                     fontWeight: 700,
                     color: "var(--color-accent)",
                     marginBottom: "0.25rem",
