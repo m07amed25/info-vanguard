@@ -31,7 +31,7 @@ const featuresData = [
   },
   {
     id: "Code & Library Scan",
-    filter: "Code & Library Scan",
+    filter: "Code & Library",
     image: "/assets/icons/code.svg",
     backgroundImage: "/assets/feature4.png",
     title: "Code & Library Scan",
@@ -49,7 +49,7 @@ const featuresData = [
   },
   {
     id:"Threat Insight Engine",
-    filter: "Threat Insight Engine",
+    filter: "Threat Insight",
     image: "/assets/icons/code.svg",
     backgroundImage: "/assets/feature8.png",
     title: "Threat Insight Engine",
@@ -58,7 +58,7 @@ const featuresData = [
   },
   {
     id: "Real Time Protection",
-    filter: "Real Time Protection",
+    filter: "Real Time",
     image: "/assets/icons/code.svg",
     backgroundImage: "/assets/feature7.png",
     title: "Real Time Protection",
@@ -67,7 +67,7 @@ const featuresData = [
   },
   {
     id: "Security Overview Dashboard",
-    filter: "Security Overview Dashboard",
+    filter: "Security Overview",
     image: "/assets/icons/code.svg",
     backgroundImage: "/assets/feature6.png",
     title: "Security Overview Dashboard",
