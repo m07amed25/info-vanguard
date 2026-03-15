@@ -183,7 +183,7 @@ export function Testimonials() {
               fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
               fontWeight: 600,
               margin: "0 0 0.75rem",
-              letterSpacing: "-0.02em",
+              letterSpacing: "0.04em",
               textAlign: "center",
             }}
           >
@@ -328,7 +328,7 @@ export function Testimonials() {
           >
             {[
               {
-                value: 500000,
+                value: 100,
                 format: "compact" as const,
                 suffix: "+",
                 label: "Active Users",
@@ -340,7 +340,7 @@ export function Testimonials() {
                 label: "Detection Rate",
               },
               {
-                value: 150,
+                value: 30,
                 format: "number" as const,
                 suffix: "+",
                 label: "Countries",

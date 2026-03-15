@@ -35,6 +35,7 @@ export type NumberFormat =
 export interface StatItem {
   value: number;
   label: string;
+  desc?: string;
   duration?: number;
   easing?: string | EasingFunction;
   format?: NumberFormat;
@@ -44,6 +45,37 @@ export interface StatItem {
   repeat?: boolean;
   icon?: ReactNode;
 }
+
+const defaultStatsData: StatItem[] = [
+  {
+    value: 860000,
+    label: "General Users",
+    desc: " internet crime complaints were reported in a single year.",
+    format: "compact",
+  },
+  {
+    value: 512000,
+    label: "Technical Users",
+    desc: "malicious packages were detected targeting software supply chains in a single year.",
+    format: "compact",
+    suffix: "+",
+  },
+  {
+    value: 30000000,
+    label: "Companies",
+    desc: "records have been exposed through a single corporate data breach.",
+    format: "compact",
+   suffix: "+",
+  }, 
+   {
+    value: 17000000,
+    label: "Manufacturing & Critical Infrastructure",
+    desc: "is the average financial impact per cyberattack incident in manufacturing.",
+    format: "compact",
+    prefix: "$",
+    suffix: "+",
+  },
+];
 export interface StatsProps {
   stats?: StatItem[];
   as?: ElementType;
@@ -100,11 +132,17 @@ function AnimatedCounter({
           }).format(value);
         case "percentage":
           return `${value.toFixed(decimals)}%`;
-        case "compact":
-          if (value >= 1000000000) return `${(value / 1000000000).toFixed(1)}B`;
-          if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
-          if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
-          return value.toFixed(0);
+        case "compact": {
+          const stripTrailingZero = (s: string) =>
+            s.endsWith(".0") ? s.slice(0, -2) : s;
+          if (value >= 1000000000)
+            return `${stripTrailingZero((value / 1000000000).toFixed(1))}B`;
+          if (value >= 1000000)
+            return `${stripTrailingZero((value / 1000000).toFixed(1))}M`;
+          if (value >= 1000)
+            return `${stripTrailingZero((value / 1000).toFixed(1))}K`;
+          return String(Math.round(value));
+        }
         case "number":
         default:
           return Math.round(value).toLocaleString("en-US");
@@ -219,6 +257,20 @@ function StatCard({ stat, index, animate, isVisible }: StatCardProps) {
           {stat.icon}
         </div>
       )}
+      <span
+        className="stats-label"
+        style={{
+          display: "block",
+          fontSize: "clamp(1rem, 1.5vw, 1rem)",
+          fontWeight: 700,
+          letterSpacing: "0.04em",
+          color: "var(--color-text)",
+          marginBottom: "0.75rem",
+          lineHeight: 1.3,
+        }}
+      >
+        {stat.label}
+      </span>
       <AnimatedCounter
         targetValue={stat.value}
         duration={stat.duration}
@@ -229,18 +281,18 @@ function StatCard({ stat, index, animate, isVisible }: StatCardProps) {
         suffix={stat.suffix}
         enabled={animate && isVisible}
       />
-      <span
-        className="stats-label"
-        style={{
-          display: "block",
-          color: "var(--color-text-muted)",
-          fontSize: "1rem",
-          lineHeight: 1.5,
-          marginTop: "0.75rem",
-        }}
-      >
-        {stat.label}
-      </span>
+      {stat.desc && (
+        <p
+          style={{
+            margin: "0.75rem 0 0",
+            color: "var(--color-text-muted)",
+            fontSize: "clamp(0.8rem, 1.2vw, 0.9rem)",
+            lineHeight: 1.5,
+          }}
+        >
+          {stat.desc}
+        </p>
+      )}
     </div>
   );
 }
@@ -287,28 +339,8 @@ export function Stats({
     };
   }, [animate]);
 
-  // Default stats data if none provided
   const displayStats =
-    Array.isArray(stats) && stats.length > 0
-      ? stats
-      : [
-          {
-            value: 860000,
-            label: "Internet Crimes",
-            format: "compact" as NumberFormat,
-          },
-          {
-            value: 1300000000,
-            label: "Data Breaches",
-            format: "compact" as NumberFormat,
-          },
-          {
-            value: 10000000,
-            label: "Financial Costs",
-            format: "compact" as NumberFormat,
-            prefix: "$",
-          },
-        ];
+    Array.isArray(stats) && stats.length > 0 ? stats : defaultStatsData;
 
   return (
     <>
@@ -365,6 +397,7 @@ export function Stats({
                 color: "var(--color-text)",
                 textAlign: "center",
                 position: "relative",
+                letterSpacing: "0.04em",
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? "translateY(0)" : "translateY(20px)",
                 transition: "opacity 0.6s ease-out, transform 0.6s ease-out",

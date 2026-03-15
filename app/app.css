@@ -201,8 +201,9 @@ h4 {
   text-align: center;
   position: relative;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
   margin-block-end: 3rem;
+  font-family: var(--font-gargoyles);
 }
 
 .main-heading::before {
@@ -445,20 +446,6 @@ img {
   to {
     opacity: 1;
   }
-}
-
-/* --------------------------------------------------------------------------
-   Hero Background
-   -------------------------------------------------------------------------- */
-.hero-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url(/assets/geometry-shape-in-green-and-black-background-vvx98nhjot0hih3n.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.5;
 }
 
 /* --------------------------------------------------------------------------

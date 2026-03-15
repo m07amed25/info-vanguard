@@ -4,21 +4,39 @@ import { motion, useInView, useAnimation } from "framer-motion";
 const whyItems = [
   {
     number: "01",
-    title: "AI-driven threat detection",
+    title: "All-in-One Cyber Shield",
     description:
-      "Machine learning identifies new and unknown malware by behavior, not just signatures.",
+      "One intelligent solution that replaces disconnected security tools by scanning file, emails, URLs, code, and hidden threats in media, all from a single place.",
   },
   {
     number: "02",
-    title: "Always learning",
+    title: "Invisible Threat Hunter",
     description:
-      "Our models improve with every new threat. You get stronger defense as the landscape evolves.",
+      "Powered by AI, Vanguard detects zero-day malware, phishing emails, and hidden data inside images, covering attack vectors traditional antivirus often overlooks.",
   },
   {
     number: "03",
-    title: "Support when it matters",
+    title: "Effortless Security",
     description:
-      "Help with infections, quarantines, and tuning — real support, not just a knowledge base.",
+      "Whether you're a developer, freelancer, or small business, Vanguard delivers powerful protection without complicated setups or expensive security stacks.",
+  },
+  {
+    number: "04",
+    title: "Instant Threat Vision",
+    description:
+      "Instant risk scores, prioritized alerts, and detailed reports give you a clear understanding of every threat so you can respond quickly and confidently.",
+  },
+  {
+    number: "05",
+    title: "Fortified Code",
+    description:
+      "Vanguard analyzes your source code, libraries, and files to uncover hidden vulnerabilities before attackers have the chance to exploit them.",
+  },
+  {
+    number: "06",
+    title: "24/7 Dedicated Support",
+    description:
+      "Our security experts are always on standby to walk you through every alert, answer every question, and resolve every concern, so you never face a threat alone.",
   },
 ];
 
@@ -58,7 +76,7 @@ export function WhyUs() {
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
             marginBlockEnd: "2.5rem",
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.04em",
             textAlign: "center",
             position: "relative",
           }}
@@ -88,6 +106,12 @@ export function WhyUs() {
                   transition: { duration: 0.5, delay: index * 0.1 },
                 },
               }}
+              whileHover={{
+                scale: 1.02,
+                zIndex: 10,
+                boxShadow: "0 8px 24px rgba(28, 115, 4, 0.2)",
+              }}
+              transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
               style={{
                 background: "var(--color-bg-card)",
                 borderRadius: "var(--radius-lg)",

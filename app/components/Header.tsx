@@ -112,6 +112,19 @@ export function Header() {
   }, [isMenuOpen]);
 
   const handleNavClick = () => setIsMenuOpen(false);
+
+  const handleNavLinkClick = (href: string) => {
+    const id = href.replace("#", "");
+    setActiveSection(id);
+    setIsMenuOpen(false);
+    const el = document.getElementById(id);
+    if (el) {
+      const headerHeight = 64;
+      const top = el.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
   const isActive = (href: string) => activeSection === href.replace("#", "");
 
   return (
@@ -431,7 +444,10 @@ export function Header() {
                   href={item.href}
                   role="menuitem"
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  onClick={handleNavClick}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavLinkClick(item.href);
+                  }}
                   className={`nav-link${isActive(item.href) ? " active" : ""}`}
                 >
                   {item.label}
@@ -502,7 +518,10 @@ export function Header() {
                   href={item.href}
                   role="menuitem"
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  onClick={handleNavClick}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavLinkClick(item.href);
+                  }}
                   className={`mobile-nav-link${isActive(item.href) ? " active" : ""}`}
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}

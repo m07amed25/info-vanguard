@@ -117,7 +117,7 @@ export function Pricing() {
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
             marginBlockEnd: "2.5rem",
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.04em",
             textAlign: "center",
             position: "relative",
           }}

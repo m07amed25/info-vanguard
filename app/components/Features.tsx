@@ -9,7 +9,7 @@ const featuresData = [
     backgroundImage: "/assets/feature1.jpg",
     title: "URL Scanning",
     description:
-      "Detect phishing, malicious redirects, and dangerous domains before you click.",
+      "Using AI, we identify suspicious or dangerous websites and detect phishing attempts, while providing clear recommendations to help users browse safely.",
   },
   {
     id: "file-scanning",
@@ -18,7 +18,7 @@ const featuresData = [
     backgroundImage: "/assets/feature2.jpg",
     title: "File Scanning",
     description:
-      "Static-first file inspection to catch malware without executing suspicious content.",
+      "We Use AI to detect malicious files, including new and unknown threats, by analyzing their content.",
   },
   {
     id: "email-scanning",
@@ -27,16 +27,16 @@ const featuresData = [
     backgroundImage: "/assets/feature3.jpg",
     title: "Email Scanning",
     description:
-      "Spot malicious attachments and social‑engineering patterns in emails.",
+      "We Protect users from phishing emails and malicious attachments by scanning content and links.",
   },
   {
-    id: "vs-extension",
-    filter: "VS Extension",
+    id: "Code & Library Scan",
+    filter: "Code & Library Scan",
     image: "/assets/icons/code.svg",
     backgroundImage: "/assets/feature4.png",
-    title: "VS Extension",
+    title: "Code & Library Scan",
     description:
-      "Analyze code and dependencies to reduce supply‑chain and vulnerability risk.",
+      "We use AI to analyze source code for security vulnerabilities and detect malicious Python libraries before installation.",
   },
   {
     id: "multimedia-scanning",
@@ -46,6 +46,33 @@ const featuresData = [
     title: "Multimedia Scanning",
     description:
       "Detect hidden payloads and suspicious data inside images, audio, and video.",
+  },
+  {
+    id:"Threat Insight Engine",
+    filter: "Threat Insight Engine",
+    image: "/assets/icons/code.svg",
+    backgroundImage: "/assets/feature8.png",
+    title: "Threat Insight Engine",
+    description:
+      "We leverage external threat intelligence APIs from top security platforms to gather global attack data. This data is used to automatically generate detailed technical reports on attacks, malware behavior, and indicators.",
+  },
+  {
+    id: "Real Time Protection",
+    filter: "Real Time Protection",
+    image: "/assets/icons/code.svg",
+    backgroundImage: "/assets/feature7.png",
+    title: "Real Time Protection",
+    description:
+      "AI-powered desktop protection for malicious files, a VS Code extension that detects code vulnerabilities and malicious libraries, and a browser extension that safeguards URLs and emails in real time.",
+  },
+  {
+    id: "Security Overview Dashboard",
+    filter: "Security Overview Dashboard",
+    image: "/assets/icons/code.svg",
+    backgroundImage: "/assets/feature6.png",
+    title: "Security Overview Dashboard",
+    description:
+      "One centralized view of all alerts, risk scores, and scan results, backed by real-time global threat intelligence that automatically generates detailed reports on attacks and malwares, so you always know what's happening and what to do next.",
   },
 ];
 
@@ -100,7 +127,7 @@ export function Features() {
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
             marginBlockEnd: "2.5rem",
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.04em",
             textAlign: "center",
             position: "relative",
           }}
@@ -138,11 +165,6 @@ export function Features() {
                 aria-selected={activeFilter === filter}
                 aria-controls="features-panel"
                 onClick={() => setActiveFilter(filter)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    setActiveFilter(filter);
-                  }
-                }}
                 style={{
                   padding: "0.5rem 1rem",
                   borderRadius: "var(--radius)",
@@ -184,6 +206,42 @@ export function Features() {
           }}
         >
           <style>{`
+            .feature-card-desc {
+              opacity: 0;
+              max-height: 0;
+              overflow: hidden;
+              transition: opacity 0.35s ease, max-height 0.35s ease;
+            }
+            .feature-card:hover .feature-card-desc {
+              opacity: 1;
+              max-height: 120px;
+            }
+            .feature-card-body {
+              transition: background 0.35s ease, padding 0.35s ease;
+            }
+            .feature-card:hover .feature-card-body {
+              background: linear-gradient(
+                to top,
+                rgba(10, 12, 10, 0.97) 0%,
+                rgba(10, 12, 10, 0.7) 50%,
+                transparent 100%
+              ) !important;
+              padding-top: 1.5rem !important;
+            }
+            @media (hover: none) {
+              .feature-card-desc {
+                opacity: 1;
+                max-height: 120px;
+              }
+              .feature-card-body {
+                background: linear-gradient(
+                  to top,
+                  rgba(10, 12, 10, 0.9) 0%,
+                  rgba(10, 12, 10, 0.6) 40%,
+                  transparent 100%
+                ) !important;
+              }
+            }
             @media (max-width: 1024px) {
               .features-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
@@ -281,7 +339,7 @@ export function Features() {
                 />
               </div>
 
-              {/* Text Content at Bottom */}
+              {/* Text Content - Title first; description reveals below on hover */}
               <div
                 className="feature-card-body"
                 style={{
@@ -291,6 +349,10 @@ export function Features() {
                   left: 0,
                   right: 0,
                   zIndex: 1,
+                  minHeight: "100px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
                 }}
               >
                 <h3
@@ -298,7 +360,8 @@ export function Features() {
                   style={{
                     fontSize: "clamp(1rem, 1.75vw, 1.25rem)",
                     fontWeight: 700,
-                    marginBlockEnd: "0.5rem",
+                    margin: 0,
+                    marginBottom: "0.25rem",
                     color: "var(--color-text)",
                     textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)",
                     letterSpacing: "-0.01em",
@@ -312,9 +375,10 @@ export function Features() {
                     color: "var(--color-text-muted)",
                     lineHeight: 1.6,
                     margin: 0,
+                    marginTop: "0.5rem",
                     fontSize: "clamp(0.8rem, 1.25vw, 0.95rem)",
                     fontWeight: 500,
-                    textShadow: "0 1px 1px rgba(0, 0, 0, 0.2)",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
                   }}
                 >
                   {feature.description}

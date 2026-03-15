@@ -75,7 +75,7 @@ export function Contact() {
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
             marginBlockEnd: "2rem",
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.04em",
             textAlign: "center",
             color: "var(--color-text)",
           }}
@@ -115,7 +115,7 @@ export function Contact() {
           style={{
             maxWidth: "clamp(280px, 90vw, 600px)",
             marginInline: "auto",
-            background: "var(--color-bg-card)",
+            background: "transparent",
             borderRadius: "var(--radius-lg)",
             border: "1px solid var(--color-border)",
             padding: "clamp(1.5rem, 5vw, 2.5rem)",
@@ -131,9 +131,10 @@ export function Contact() {
                   marginBlockEnd: "0.5rem",
                   fontWeight: 500,
                   color: "var(--color-text)",
+                  background: "transparent",
                 }}
               >
-                Your Name <span aria-hidden="true">*</span>
+                Your Name <span aria-hidden="true"></span>
                 <span className="sr-only"> (required)</span>
               </label>
               <input
@@ -149,7 +150,7 @@ export function Contact() {
                   padding: "1rem 1.25rem",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
-                  background: "var(--color-bg)",
+                  background: "var(--color-bg-card)",
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius)",
                   color: "var(--color-text)",
@@ -171,7 +172,7 @@ export function Contact() {
                   color: "var(--color-text)",
                 }}
               >
-                Email Address <span aria-hidden="true">*</span>
+                Email Address <span aria-hidden="true"></span>
                 <span className="sr-only"> (required)</span>
               </label>
               <input
@@ -188,7 +189,7 @@ export function Contact() {
                   padding: "clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.25rem)",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
-                  background: "var(--color-bg)",
+                  background: "var(--color-bg-card)",
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius)",
                   color: "var(--color-text)",
@@ -223,7 +224,7 @@ export function Contact() {
                   padding: "clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.25rem)",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
-                  background: "var(--color-bg)",
+                  background: "var(--color-bg-card)",
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius)",
                   color: "var(--color-text)",
@@ -245,7 +246,7 @@ export function Contact() {
                   color: "var(--color-text)",
                 }}
               >
-                Message <span aria-hidden="true">*</span>
+                Message <span aria-hidden="true"></span>
                 <span className="sr-only"> (required)</span>
               </label>
               <textarea
@@ -260,7 +261,7 @@ export function Contact() {
                   padding: "clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.25rem)",
                   fontSize: "clamp(1rem, 2vw, 1rem)",
                   fontFamily: "var(--font-sans)",
-                  background: "var(--color-bg)",
+                  background: "var(--color-bg-card)",
                   border: "1px solid var(--color-border)",
                   borderRadius: "var(--radius)",
                   color: "var(--color-text)",

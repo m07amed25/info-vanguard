@@ -123,7 +123,7 @@ export function Blog() {
               fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
               fontWeight: 600,
               margin: "0 0 0.75rem",
-              letterSpacing: "-0.02em",
+              letterSpacing: "0.04em",
               textAlign: "center",
             }}
           >

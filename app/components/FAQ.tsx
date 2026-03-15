@@ -55,6 +55,14 @@ export function FAQ() {
         position: "relative",
       }}
     >
+      <style>{`
+        @media (max-width: 768px) {
+          .faq-accordion {
+            max-width: 100%;
+            padding: 0 1rem;
+          }
+        }
+      `}</style>
       <div className="container questions-container">
         <motion.div
           className="questions-header"
@@ -70,7 +78,7 @@ export function FAQ() {
               fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
               fontWeight: 600,
               marginBlockEnd: "3rem",
-              letterSpacing: "-0.02em",
+              letterSpacing: "0.04em",
               textAlign: "center",
               position: "relative",
             }}
@@ -92,116 +100,133 @@ export function FAQ() {
           </p>
         </motion.div>
 
-        <div className="faq-accordion">
+        <div
+          className="faq-accordion"
+          style={{
+            maxWidth: "720px",
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
           {faqData.map((item, index) => (
-            <motion.div
-              key={index}
-              className="faq-accordion-item"
-              data-faq-index={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={controls}
-              variants={{
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { duration: 0.5, delay: 0.1 + index * 0.1 },
-                },
-              }}
-              style={{
-                marginBottom: "1rem",
-                borderRadius: "var(--radius)",
-                border: "1px solid var(--color-border)",
-                background: "var(--color-bg-card)",
-                overflow: "hidden",
-              }}
-            >
-              <button
-                type="button"
-                className="faq-accordion-trigger"
-                aria-expanded={openIndex === index}
-                aria-controls={`faq-panel-${index}`}
-                id={`faq-trigger-${index}`}
-                onClick={() => toggleItem(index)}
+              <motion.div
+                key={index}
+                className="faq-accordion-item"
+                data-faq-index={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={controls}
+                variants={{
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      delay: 0.1 + index * 0.1,
+                    },
+                  },
+                }}
                 style={{
-                  width: "100%",
-                  padding: "clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 1.5rem)",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--color-text)",
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "1.125rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  textAlign: "left",
+                  borderRadius: "var(--radius)",
+                  border: "1px solid var(--color-border)",
+                  background: "var(--color-bg-card)",
+                  overflow: "hidden",
                 }}
               >
-                <span
-                  className="faq-accordion-question"
+                <button
+                  type="button"
+                  className="faq-accordion-trigger"
+                  aria-expanded={openIndex === index}
+                  aria-controls={`faq-panel-${index}`}
+                  id={`faq-trigger-${index}`}
+                  onClick={() => toggleItem(index)}
                   style={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    color:
-                      openIndex === index
-                        ? "var(--color-accent)"
-                        : "var(--color-text)",
-                    flex: 1,
-                    paddingRight: "1rem",
-                    transition: "color 0.3s ease",
+                    width: "100%",
+                    padding:
+                      "clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 1.5rem)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    background: "transparent",
+                    border: "none",
+                    color: "var(--color-text)",
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "1.125rem",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    textAlign: "left",
                   }}
                 >
-                  {item.question}
-                </span>
-                <span
-                  className="faq-accordion-icon"
-                  aria-hidden="true"
-                  style={{
-                    color: "var(--color-accent)",
-                    transition: "transform 0.3s ease",
-                    transform:
-                      openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
-                  }}
-                >
-                  <i className="fa-solid fa-chevron-down" />
-                </span>
-              </button>
-
-              <AnimatePresence>
-                {openIndex === index && (
-                  <motion.div
-                    id={`faq-panel-${index}`}
-                    role="region"
-                    aria-labelledby={`faq-trigger-${index}`}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    style={{ overflow: "hidden" }}
+                  <span
+                    className="faq-accordion-question"
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: 500,
+                      color:
+                        openIndex === index
+                          ? "var(--color-accent)"
+                          : "var(--color-text)",
+                      flex: 1,
+                      paddingRight: "1rem",
+                      transition: "color 0.3s ease",
+                    }}
                   >
-                    {/* Divider between question and answer */}
-                    <div
-                      style={{
-                        height: "1px",
-                        background: "var(--color-border)",
-                        margin: "0 1.5rem",
+                    {item.question}
+                  </span>
+                  <span
+                    className="faq-accordion-icon"
+                    aria-hidden="true"
+                    style={{
+                      color: "var(--color-accent)",
+                      transition: "transform 0.3s ease",
+                      transform:
+                        openIndex === index
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                    }}
+                  >
+                    <i className="fa-solid fa-chevron-down" />
+                  </span>
+                </button>
+
+                <AnimatePresence>
+                  {openIndex === index && (
+                    <motion.div
+                      id={`faq-panel-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-trigger-${index}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        ease: "easeInOut",
                       }}
-                      aria-hidden="true"
-                    />
-                    <div
-                      className="faq-accordion-answer"
-                      style={{
-                        padding: "0 clamp(1rem, 4vw, 1.5rem) clamp(1rem, 3vw, 1.25rem)",
-                        color: "var(--color-text-muted)",
-                        lineHeight: 1.6,
-                      }}
-                      dangerouslySetInnerHTML={{ __html: item.answer }}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div
+                        style={{
+                          height: "1px",
+                          background: "var(--color-border)",
+                          margin: "0 1.5rem",
+                        }}
+                        aria-hidden="true"
+                      />
+                      <div
+                        className="faq-accordion-answer"
+                        style={{
+                          padding:
+                            "0 clamp(1rem, 4vw, 1.5rem) clamp(1rem, 3vw, 1.25rem)",
+                          color: "var(--color-text-muted)",
+                          lineHeight: 1.6,
+                        }}
+                        dangerouslySetInnerHTML={{ __html: item.answer }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
           ))}
         </div>
       </div>

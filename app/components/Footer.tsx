@@ -225,35 +225,18 @@ export function Footer() {
           <div className="footer-brand-col">
             <a
               href="#home"
+              className="nav-logo"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                color: "var(--color-text)",
-                textDecoration: "none",
                 marginBottom: "1.25rem",
               }}
             >
               <img
-                src="/assets/Logo.png"
+                src="/assets/icons/helmet.svg"
                 alt=""
-                style={{
-                  height: "40px",
-                  width: "40px",
-                  objectFit: "contain",
-                  flexShrink: 0,
-                }}
+                aria-hidden="true"
+                className="nav-logo-icon"
               />
-              <span
-                style={{
-                  fontFamily: "'Gargoyles', serif",
-                  fontWeight: 700,
-                  fontSize: "2rem",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                VANGUARD
-              </span>
+              <span className="nav-logo-text">ANGUARD</span>
             </a>
             <p
               style={{
@@ -369,7 +352,16 @@ export function Footer() {
             <form
               className="footer-newsletter-form"
               onSubmit={handleSubscribe}
-              style={{ display: "flex", gap: "0.5rem" }}
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "stretch",
+                minHeight: "44px",
+                background: "var(--color-bg)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius)",
+                transition: "border-color 0.2s ease",
+              }}
             >
               <input
                 type="email"
@@ -378,41 +370,45 @@ export function Footer() {
                 placeholder="Enter your email"
                 required
                 style={{
-                  padding: "0.75rem 1rem",
+                  padding: "0.75rem 1rem 0.75rem 1rem",
+                  paddingRight: "6.5rem",
                   fontSize: "0.95rem",
                   fontFamily: "var(--font-sans)",
-                  background: "var(--color-bg)",
-                  border: "1px solid var(--color-border)",
+                  background: "transparent",
+                  border: "none",
                   borderRadius: "var(--radius)",
                   color: "var(--color-text)",
                   outline: "none",
                   flex: "1 1 0",
                   minWidth: "0",
-                  minHeight: "44px",
-                  transition: "border-color 0.2s ease",
+                  minHeight: "42px",
                 }}
                 onFocus={(e) =>
-                  (e.target.style.borderColor = "var(--color-accent)")
+                  (e.target.parentElement!.style.borderColor =
+                    "var(--color-accent)")
                 }
                 onBlur={(e) =>
-                  (e.target.style.borderColor = "var(--color-border)")
+                  (e.target.parentElement!.style.borderColor =
+                    "var(--color-border)")
                 }
               />
               <button
                 type="submit"
                 style={{
-                  padding: "0.75rem 1.25rem",
-                  fontSize: "0.95rem",
+                  position: "absolute",
+                  top: "4px",
+                  right: "4px",
+                  bottom: "4px",
+                  padding: "0 1rem",
+                  fontSize: "0.9rem",
                   fontWeight: 600,
                   background: "var(--color-accent)",
                   color: "#fff",
                   border: "none",
-                  borderRadius: "var(--radius)",
+                  borderRadius: "calc(var(--radius) - 2px)",
                   cursor: "pointer",
                   transition: "background-color 0.2s ease",
                   whiteSpace: "nowrap",
-                  minHeight: "44px",
-                  flexShrink: 0,
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.backgroundColor =

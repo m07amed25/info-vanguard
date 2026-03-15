@@ -1,4 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
+import HexagonBackground from "./HexagonBackground";
 
 export function Hero() {
   const { scrollY } = useScroll();
@@ -94,7 +95,9 @@ export function Hero() {
           overflow: "hidden",
         }}
         aria-hidden="true"
-      />
+      >
+        <HexagonBackground contained />
+      </div>
 
       <div
         className="container"
@@ -113,22 +116,15 @@ export function Hero() {
             fontSize: "clamp(2rem, 5vw, 3.5rem)",
             fontWeight: 700,
             lineHeight: 1.15,
-            letterSpacing: "-0.03em",
+            letterSpacing: "0.03em",
             margin: "0 0 1.25rem",
+            color: "#fff",
+            textShadow:
+              "0 0 20px #1c7304, 0 0 40px rgba(28, 115, 4, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)",
           }}
         >
-          <span className="line" style={{ display: "block" }}>
-            Guardians
-          </span>
-          <span
-            className="line accent"
-            style={{
-              display: "block",
-              color: "var(--color-accent)",
-            }}
-          >
-            Of The Digital Frontier.
-          </span>
+          Guardians Of The Digital{" "}
+          <span style={{ color: "#1c7304" }}>Frontier.</span>
         </motion.h1>
 
         <motion.p

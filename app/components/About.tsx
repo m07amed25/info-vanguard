@@ -34,7 +34,7 @@ export function About() {
             fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
             fontWeight: 600,
             marginBlockEnd: "3rem",
-            letterSpacing: "-0.02em",
+            letterSpacing: "0.04em",
             textAlign: "center",
             position: "relative",
           }}
@@ -75,19 +75,60 @@ export function About() {
               contribution of AI — to stay ahead of threats, not just react to
               them.
             </p>
-            <p
-              className="about-p"
+            <blockquote
+              className="about-quote"
               style={{
+                margin: "0 0 1.5rem",
+                padding: "1.25rem 1.5rem",
+                paddingLeft: "1.5rem",
+                borderLeft: "4px solid var(--color-accent)",
+                borderRadius: "0 var(--radius) var(--radius) 0",
+                background: "var(--color-accent-soft)",
                 color: "var(--color-text-muted)",
-                marginBottom: "1.5rem",
-                lineHeight: 1.7,
+                lineHeight: 1.75,
+                fontSize: "clamp(0.9rem, 1.25vw, 1rem)",
+                fontStyle: "italic",
+                position: "relative",
               }}
             >
-              We combine proven security engineering with machine learning and
-              behavioral analysis. Our AI continuously learns from global threat
-              data to detect malware, ransomware, and zero-day attacks before
-              they harm your device.
-            </p>
+              <span
+                style={{
+                  position: "absolute",
+                  top: "0.5rem",
+                  left: "1rem",
+                  fontSize: "2.5rem",
+                  lineHeight: 1,
+                  color: "var(--color-accent)",
+                  opacity: 0.5,
+                  fontFamily: "serif",
+                }}
+                aria-hidden="true"
+              >
+                "
+              </span>
+              <span style={{ display: "block", paddingLeft: "1.5rem" }}>
+                We combine proven security engineering with machine learning and
+                behavioral analysis. Our AI continuously learns from global
+                threat data to detect malware, ransomware, and zero-day attacks
+                before they harm your device.
+              </span>
+              <span
+                style={{
+                  display: "block",
+                  textAlign: "right",
+                  marginTop: "0.25rem",
+                  fontSize: "2.5rem",
+                  lineHeight: 0.5,
+                  color: "var(--color-accent)",
+                  opacity: 0.5,
+                  fontFamily: "serif",
+                  paddingLeft: "1.5rem",
+                }}
+                aria-hidden="true"
+              >
+                "
+              </span>
+            </blockquote>
             <ul
               className="about-list"
               style={{
