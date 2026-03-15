@@ -142,8 +142,7 @@ export function Hero() {
               "0 0 20px #1c7304, 0 0 40px rgba(28, 115, 4, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)",
           }}
         >
-          Guardians Of The Digital{" "}
-          <span className="text-flame">Frontier.</span>
+          Guardians Of The Digital <span className="text-flame">Frontier.</span>
         </motion.h1>
 
         <motion.p

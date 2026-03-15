@@ -194,7 +194,7 @@ export function Testimonials() {
               fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
               color: "var(--color-text-muted)",
               maxWidth: "520px",
-              margin: "0 auto",
+              margin: "1.5rem auto",
             }}
           >
             See what IT leaders and security experts say about Vanguard's
