@@ -40,6 +40,25 @@ export function Hero() {
             display: none !important;
           }
         }
+
+        @keyframes flame-glow {
+          0%, 100% {
+            color: #1c7304;
+            text-shadow: 0 0 20px #1c7304, 0 0 40px rgba(28, 115, 4, 0.6);
+          }
+          33% {
+            color: #2ea309;
+            text-shadow: 0 0 25px #2ea309, 0 0 50px rgba(46, 163, 9, 0.8);
+          }
+          66% {
+            color: #35c20b;
+            text-shadow: 0 0 30px #35c20b, 0 0 60px rgba(53, 194, 11, 0.9), 0 0 10px rgba(255, 255, 255, 0.4);
+          }
+        }
+        .text-flame {
+          animation: flame-glow 4s infinite alternate ease-in-out;
+          display: inline-block;
+        }
       `}</style>
       <motion.div
         style={{
@@ -124,7 +143,7 @@ export function Hero() {
           }}
         >
           Guardians Of The Digital{" "}
-          <span style={{ color: "#1c7304" }}>Frontier.</span>
+          <span className="text-flame">Frontier.</span>
         </motion.h1>
 
         <motion.p

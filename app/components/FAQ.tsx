@@ -209,7 +209,7 @@ export function FAQ() {
                         style={{
                           height: "1px",
                           background: "var(--color-border)",
-                          margin: "0 1.5rem",
+                          margin: "0 1.5rem 1rem",
                         }}
                         aria-hidden="true"
                       />
