@@ -95,9 +95,7 @@ export default function HexagonBackground({
               {Array.from({ length: grid.cols }).map((_, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
-                  className={
-                    "relative shrink-0 transition-all duration-1000 [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] before:absolute before:inset-0 before:bg-[var(--border-color)] before:transition-all before:duration-1000 after:absolute after:inset-[var(--margin)] after:bg-transparent after:[clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] after:transition-all after:duration-500 hover:before:bg-[var(--glow-color)] hover:before:duration-0 hover:after:bg-transparent hover:after:duration-0 hover:before:shadow-[0_0_20px_var(--glow-color)]"
-                  }
+                  className="hexagon-item"
                   style={hexagonStyle as React.CSSProperties}
                 />
               ))}
