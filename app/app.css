@@ -35,6 +35,7 @@ html {
   --color-green-dark: #132a04;
   --color-green-mid: #1c7304;
   --color-accent: #1c7304;
+  --color-accent-rgb: 28, 115, 4;
   --color-accent-hover: #248a05;
   --color-accent-soft: rgba(28, 115, 4, 0.15);
   --color-accent-glow: rgba(28, 115, 4, 0.2);

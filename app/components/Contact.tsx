@@ -10,17 +10,31 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus("idle");
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    const formData = new FormData(e.currentTarget);
 
-    setIsSubmitting(false);
-    setSubmitStatus("success");
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
 
-    formRef.current?.reset();
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
 
-    setTimeout(() => {
-      setSubmitStatus("idle");
-    }, 2500);
+      setSubmitStatus("success");
+      formRef.current?.reset();
+    } catch (error) {
+      console.error("Submission error:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => {
+        setSubmitStatus("idle");
+      }, 5000);
+    }
   };
 
   return (

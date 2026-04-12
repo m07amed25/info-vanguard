@@ -95,31 +95,58 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: "Sarah Chen",
-    role: "CTO",
-    company: "TechCorp Solutions",
+    name: "Mohamed Waheed",
+    role: "Cyber Security Team Leader",
+    company: "SMART Technology Solutions",
     content:
-      "Vanguard has transformed our security posture. The AI-driven detection caught threats that our previous antivirus completely missed. It's like having a dedicated security team watching 24/7.",
+      "Vanguard stands out because it approaches cybersecurity as a connected ecosystem rather than a set of isolated tools. What impressed me most is the way the platform correlates threats across files, URLs, emails, code, and even multimedia content. From a security leadership perspective, this kind of unified and layered visibility is exactly what modern defense strategies need, especially against multi-vector attacks.",
     rating: 5,
   },
   {
     id: 2,
-    name: "Michael Rodriguez",
-    role: "IT Director",
-    company: "Global Finance Inc",
+    name: "Ahmed Mansour",
+    role: "Cyber Security Consultant",
+    company: "Freelance",
     content:
-      "We protect over 5,000 endpoints with Vanguard. The minimal system impact combined with comprehensive protection is exactly what we needed. Our incident response time has dropped by 80%.",
+      "What I appreciate about Vanguard is that it reflects a strong understanding of today’s threat landscape. The combination of AI-driven detection, static-first analysis, and threat intelligence integration makes the solution both practical and forward-looking. It is not just another scanner; it is a well-thought-out security platform that addresses phishing, malware, vulnerable code, and hidden payloads in a more comprehensive way.",
     rating: 5,
   },
   {
     id: 3,
-    name: "Emily Watson",
-    role: "Founder & CEO",
-    company: "StartupX",
+    name: "Maher Elgamil",
+    role: "Lead Software Engineering",
+    company: "Sudeem",
     content:
-      "As a small business, we can't afford a full security team. Vanguard gives us enterprise-grade protection at a fraction of the cost. The password manager and VPN integration are lifesavers.",
+      "From a software engineering point of view, Vanguard is a very promising project because it bridges security research with real engineering use cases. The inclusion of source code vulnerability scanning, malicious Python package detection, and developer-focused integration such as browser and coding workflow support shows that the team understands how security should fit naturally into the development lifecycle.",
     rating: 5,
-  }
+  },
+  {
+    id: 4,
+    name: "Mahmoud Ayman",
+    role: "CEO",
+    company: "Parmagina",
+    content:
+      "Vanguard has clear business value because it turns advanced cybersecurity concepts into a solution that is accessible for real users and organizations. What makes it compelling is that it does not target only large enterprises; it can also serve individuals, developers, and small businesses that need strong protection without the complexity of expensive enterprise tools.",
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: "Ahmed Elbosily",
+    role: "Co-Founder",
+    company: "CUBE Egypt",
+    content:
+      "What makes Vanguard impressive is its product vision. The team identified a real problem in the market: fragmented desktop security and the lack of one intelligent platform that covers multiple attack surfaces. By bringing together AI-powered scanning, threat intelligence, and a centralized dashboard, Vanguard shows strong potential as a scalable cybersecurity product.",
+    rating: 5,
+  },
+  {
+    id: 6,
+    name: "Mahmoud Emad",
+    role: "Software Project Manager",
+    company: "Code Clouders",
+    content:
+      "Vanguard reflects solid project thinking in both scope and execution. The platform is not limited to one security feature; it is designed as a coordinated system with multiple specialized modules working together under one architecture. From a project management perspective, this shows good planning, clear product direction, and a strong awareness of both technical challenges and user needs.",
+    rating: 5,
+  },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -128,8 +155,8 @@ function StarRating({ rating }: { rating: number }) {
       {[...Array(5)].map((_, i) => (
         <svg
           key={i}
-          width="18"
-          height="18"
+          width="16"
+          height="16"
           viewBox="0 0 24 24"
           fill={i < rating ? "var(--color-accent)" : "none"}
           stroke="var(--color-accent)"
@@ -140,6 +167,102 @@ function StarRating({ rating }: { rating: number }) {
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
       ))}
+    </div>
+  );
+}
+
+interface TestimonialCardProps {
+  testimonial: Testimonial;
+}
+
+function TestimonialCard({ testimonial }: TestimonialCardProps) {
+  return (
+    <div
+      style={{
+        width: "min(350px, 85vw)",
+        padding: "1.5rem",
+        borderRadius: "20px",
+        background: "rgba(255, 255, 255, 0.03)",
+        backdropFilter: "blur(10px)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        minHeight: "280px",
+        boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.3)",
+        margin: "0 0.75rem",
+        flexShrink: 0,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "start",
+        }}
+      >
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "12px",
+            background:
+              "linear-gradient(135deg, var(--color-accent), var(--color-accent-soft))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "1.1rem",
+            fontWeight: 700,
+            color: "white",
+            boxShadow: "0 4px 12px rgba(var(--color-accent-rgb), 0.3)",
+          }}
+        >
+          {testimonial.name.charAt(0)}
+        </div>
+        <StarRating rating={testimonial.rating} />
+      </div>
+
+      <p
+        style={{
+          fontSize: "0.875rem",
+          lineHeight: 1.5,
+          color: "rgba(255, 255, 255, 0.8)",
+          fontStyle: "italic",
+          flexGrow: 1,
+        }}
+      >
+        "{testimonial.content}"
+      </p>
+
+      <div
+        style={{
+          paddingTop: "1rem",
+          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+          marginTop: "auto",
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 600,
+            color: "white",
+            fontSize: "0.95rem",
+            marginBottom: "0.15rem",
+          }}
+        >
+          {testimonial.name}
+        </div>
+        <div
+          style={{
+            fontSize: "0.75rem",
+            color: "var(--color-text-muted)",
+            fontWeight: 500,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          }}
+        >
+          {testimonial.role} @ {testimonial.company}
+        </div>
+      </div>
     </div>
   );
 }
@@ -157,171 +280,174 @@ export function Testimonials() {
     }
   }, [isInView, controls]);
 
+  // Merge all testimonials into one row
+  const allTestimonials = [...testimonials];
+  const marqueeControls = useAnimation();
+
+  useEffect(() => {
+    marqueeControls.start({
+      x: ["0%", "-50%"],
+      transition: {
+        duration: 40,
+        repeat: Infinity,
+        ease: "linear",
+      },
+    });
+  }, [marqueeControls]);
+
   return (
     <section
       id="testimonials"
       className="section testimonials"
       ref={ref}
       style={{
-        padding: "var(--spacing-section) 0",
+        padding: "clamp(2rem, 5vw, 4rem) 0",
         position: "relative",
-        background: "var(--color-bg-elevated)",
+        background: "var(--color-bg)",
+        overflow: "hidden",
       }}
     >
-      <div className="container">
+      {/* Background Decorative Elements */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "-5%",
+          width: "40%",
+          height: "40%",
+          background:
+            "radial-gradient(circle, rgba(var(--color-accent-rgb), 0.05) 0%, transparent 70%)",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          right: "-5%",
+          width: "40%",
+          height: "40%",
+          background:
+            "radial-gradient(circle, rgba(var(--color-accent-rgb), 0.05) 0%, transparent 70%)",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
+
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={controls}
           variants={{
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
           }}
           style={{ textAlign: "center", marginBottom: "3rem" }}
         >
+          <span
+            style={{
+              color: "var(--color-accent)",
+              fontWeight: 600,
+              fontSize: "0.85rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.2em",
+              display: "block",
+              marginBottom: "0.75rem",
+            }}
+          >
+            Testimonials
+          </span>
           <h2
             className="main-heading"
             style={{
-              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
-              fontWeight: 600,
-              margin: "0 0 0.75rem",
-              letterSpacing: "0.04em",
-              textAlign: "center",
+              fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
+              fontWeight: 800,
+              margin: "0 0 1rem",
+              lineHeight: 1.2,
+              background:
+                "linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
-            Trusted by Security Professionals
+            Trusted by Security Experts
           </h2>
           <p
             style={{
-              fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
+              fontSize: "clamp(0.9rem, 1.5vw, 1.05rem)",
               color: "var(--color-text-muted)",
-              maxWidth: "520px",
-              margin: "1.5rem auto",
+              maxWidth: "540px",
+              margin: "0 auto",
+              lineHeight: 1.6,
             }}
           >
-            See what IT leaders and security experts say about Vanguard's
-            protection.
+            Insights from industry leaders who have experienced the power of
+            Vanguard.
           </p>
         </motion.div>
+      </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))",
-            gap: "clamp(1.25rem, 3vw, 2rem)",
-          }}
-        >
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={controls}
-              variants={{
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { duration: 0.6, delay: 0.1 + index * 0.1 },
-                },
-              }}
-              style={{
-                padding: "clamp(1.25rem, 4vw, 2rem)",
-                borderRadius: "var(--radius-lg)",
-                backgroundColor: "var(--color-bg-card)",
-                border: "1px solid var(--color-border)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.5rem",
-                height: "100%",
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              <div style={{ marginBottom: "1rem" }}>
-                <StarRating rating={testimonial.rating} />
-              </div>
-
-              <p
-                style={{
-                  fontSize: "1rem",
-                  lineHeight: 1.7,
-                  color: "var(--color-text)",
-                  marginBottom: "1.5rem",
-                  fontStyle: "italic",
-                }}
-              >
-                "{testimonial.content}"
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
-                  paddingTop: "1rem",
-                  borderTop: "1px solid var(--color-border)",
-                }}
-              >
-                <div
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    borderRadius: "50%",
-                    background: "var(--color-accent-soft)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.25rem",
-                    fontWeight: 600,
-                    color: "var(--color-accent)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {testimonial.name.charAt(0)}
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      color: "var(--color-text)",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {testimonial.name}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.875rem",
-                      color: "var(--color-text-muted)",
-                    }}
-                  >
-                    {testimonial.role}, {testimonial.company}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
+      {/* Marquee Container */}
+      <div
+        style={{
+          width: "100%",
+          overflow: "hidden",
+          maskImage:
+            "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+        }}
+        onMouseEnter={() => marqueeControls.stop()}
+        onMouseLeave={() =>
+          marqueeControls.start({
+            x: ["0%", "-50%"],
+            transition: {
+              duration: 40,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          })
+        }
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          style={{ display: "flex", width: "fit-content" }}
+          animate={marqueeControls}
+        >
+          {[...allTestimonials, ...allTestimonials].map((testimonial, idx) => (
+            <TestimonialCard
+              key={`${testimonial.id}-${idx}`}
+              testimonial={testimonial}
+            />
+          ))}
+        </motion.div>
+      </div>
+
+      <div
+        className="container"
+        style={{ marginTop: "3.5rem", position: "relative", zIndex: 1 }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={controls}
           variants={{
             visible: {
               opacity: 1,
-              y: 0,
-              transition: { duration: 0.6, delay: 0.5 },
+              scale: 1,
+              transition: { duration: 0.8, delay: 0.4 },
             },
           }}
           style={{
-            marginTop: "4rem",
             padding: "2rem",
-            background: "var(--color-bg-card)",
-            borderRadius: "var(--radius-lg)",
-            border: "1px solid var(--color-border)",
+            background: "rgba(255, 255, 255, 0.02)",
+            borderRadius: "24px",
+            border: "1px solid rgba(255, 255, 255, 0.05)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
               gap: "2rem",
               textAlign: "center",
             }}
@@ -349,21 +475,22 @@ export function Testimonials() {
                 value: 24,
                 format: "number" as const,
                 suffix: "/7",
-                label: "Support",
+                label: "Global Support",
               },
             ].map((stat, index) => (
               <div key={index}>
                 <div
                   style={{
-                    fontSize: "clamp(1.5rem, 3vw, 2rem)",
-                    fontWeight: 700,
+                    fontSize: "clamp(2rem, 4vw, 2.75rem)",
+                    fontWeight: 800,
                     color: "var(--color-accent)",
-                    marginBottom: "0.25rem",
+                    marginBottom: "0.5rem",
+                    letterSpacing: "-0.02em",
                   }}
                 >
                   <AnimatedCounter
                     targetValue={stat.value}
-                    duration={5000}
+                    duration={3000}
                     format={stat.format}
                     suffix={stat.suffix}
                     enabled={isVisible}
@@ -371,8 +498,11 @@ export function Testimonials() {
                 </div>
                 <div
                   style={{
-                    fontSize: "0.9rem",
-                    color: "var(--color-text-muted)",
+                    fontSize: "0.85rem",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
                   }}
                 >
                   {stat.label}

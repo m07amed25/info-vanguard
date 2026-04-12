@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useAnimation, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useAnimation,
+  useReducedMotion,
+} from "framer-motion";
 
 const DESKTOP_BG = "/assets/desktop.png";
 const WEBSITE_BG = "/assets/website.png";
@@ -13,24 +18,27 @@ const channelItems = [
     id: "desktop",
     title: "Shield every workstation",
     icon: "fa-solid fa-desktop",
+    accent: "#1c7304",
     description:
-      "Run Vanguard natively on Windows and macOS with full-system scanning, real-time shields, and policies that still work when the network drops—so laptops and desktops stay consistent with your org’s bar for safety.",
+      "Run Vanguard natively on Windows and macOS with full-system scanning, real-time shields, and policies that still work even offline.",
     backgroundImage: DESKTOP_BG,
   },
   {
     id: "website",
     title: "Browse with clarity",
     icon: "fa-solid fa-globe",
+    accent: "#0ea5e9",
     description:
-      "Cloud-backed URL intelligence and risky-site signals follow your users across the web. Fewer impostor pages, less guesswork, and a lighter load on your team when links are shared inside the business.",
+      "Cloud-backed URL intelligence follows your users across the web. Fewer impostor pages and less guesswork for your team.",
     backgroundImage: WEBSITE_BG,
   },
   {
     id: "extensions",
-    title: "Protection inside your apps",
+    title: "Protection inside apps",
     icon: "fa-solid fa-puzzle-piece",
+    accent: "#8b5cf6",
     description:
-      "Bring checks into the tools people already use—browsers, mail surfaces, and dev workflows—so files and links are handled in context, without forcing another portal or breaking flow.",
+      "Bring checks into the tools people use—browsers, mail, and dev workflows—without breaking flow or forcing another portal.",
     backgroundImage: EXTENSIONS_BG,
   },
 ] as const;
@@ -43,20 +51,42 @@ function ChannelCardForeground({
   isActive: boolean;
 }) {
   return (
-    <div className={`channels-card-fg card-expandable${isActive ? " active" : ""}`}>
-      <div className="channels-card-top">
-        <div className="channels-card-icon-wrap" aria-hidden>
-          <i className={item.icon} />
+    <div
+      className={`channels-card-fg transition-all duration-500 flex flex-col justify-end p-6 h-full z-10 relative ${isActive ? "opacity-100" : "opacity-80"}`}
+    >
+      <motion.div layout className="flex items-center gap-4 mb-4">
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-md border border-white/10"
+          style={{
+            background: isActive
+              ? `${item.accent}33`
+              : "rgba(255,255,255,0.05)",
+            boxShadow: isActive ? `0 0 20px ${item.accent}33` : "none",
+          }}
+        >
+          <i
+            className={`${item.icon} text-xl transition-colors duration-300`}
+            style={{ color: isActive ? item.accent : "#94a3b8" }}
+          />
         </div>
-        <div className="channels-card-top-text">
-          <h3 className="channels-card-title">{item.title}</h3>
-        </div>
-      </div>
-      <div className="card-expandable-hidden">
-        <div className="channels-card-description">
-          <p>{item.description}</p>
-        </div>
-      </div>
+        <h3 className="text-xl font-semibold text-white leading-tight">
+          {item.title}
+        </h3>
+      </motion.div>
+
+      <motion.div
+        initial={false}
+        animate={{
+          height: isActive ? "auto" : 0,
+          opacity: isActive ? 1 : 0,
+        }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="overflow-hidden"
+      >
+        <p className="text-slate-300 text-sm leading-relaxed mb-4">
+          {item.description}
+        </p>
+      </motion.div>
     </div>
   );
 }
@@ -69,8 +99,7 @@ export function Channels() {
   const [activeChannelId, setActiveChannelId] = useState<string>("desktop");
   const [suppressChannelForeground, setSuppressChannelForeground] =
     useState(false);
-  const [revealChannelForeground, setRevealChannelForeground] =
-    useState(false);
+  const [revealChannelForeground, setRevealChannelForeground] = useState(false);
   const skipNextForegroundTransition = useRef(true);
   const columnRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -110,9 +139,31 @@ export function Channels() {
     };
   }, [activeChannelId, reduceMotion]);
 
+  useEffect(() => {
+    // Mobile scroll sync
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && window.innerWidth <= 900) {
+            setActiveChannelId(
+              (entry.target as HTMLElement).dataset.id || "desktop",
+            );
+          }
+        });
+      },
+      { threshold: 0.6, rootMargin: "0px" },
+    );
+
+    Object.values(columnRefs.current).forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const activeIndex = Math.max(
     0,
-    channelItems.findIndex((c) => c.id === activeChannelId)
+    channelItems.findIndex((c) => c.id === activeChannelId),
   );
 
   function goTo(id: (typeof channelItems)[number]["id"]) {
@@ -136,7 +187,7 @@ export function Channels() {
       style={{
         padding: "var(--spacing-section) 0",
         position: "relative",
-        overflow: "hidden", 
+        overflow: "hidden",
       }}
     >
       <div className="container">
@@ -164,36 +215,42 @@ export function Channels() {
           .channels-columns {
             display: flex;
             flex-direction: row;
-            gap: 1rem;
+            gap: 1.5rem;
             width: 100%;
-            max-width: 100%;
             align-items: stretch;
-            overflow: hidden; 
           }
 
           .channels-column {
             position: relative;
             min-width: 0;
             flex: 1;
-            transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: flex 0.7s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
-            border-radius: var(--radius-lg, 12px);
+            border-radius: 24px;
+            cursor: pointer;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
           }
 
           @media (min-width: 901px) {
             .channels-column.is-active {
-              flex: 1.8; 
+              flex: 2.5;
+              border-color: rgba(255, 255, 255, 0.15);
+              box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             }
             .channels-column.is-folded {
-              flex: 0.7;
+              flex: 0.8;
+            }
+            .channels-column:hover:not(.is-active) {
+              flex: 1;
+              background: #1e293b;
             }
           }
 
           .channels-article {
             position: relative;
             width: 100%;
-            height: 100%;
-            min-height: 400px;
+            height: 500px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -202,53 +259,74 @@ export function Channels() {
           .channels-bg-layer {
             position: absolute;
             inset: 0;
-            /* منع الـ Scaling تماماً: نستخدم الحجم الافتراضي للصورة */
             background-size: cover; 
             background-position: center;
             background-repeat: no-repeat;
             z-index: 0;
-            /* إزالة أي transition للـ background-size لمنع الـ scaling animation */
-            transition: filter 0.5s ease, opacity 0.5s ease;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease, opacity 0.5s ease;
+          }
+
+          .channels-column.is-active .channels-bg-layer {
+            transform: scale(1.05);
+          }
+
+          .holographic-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.3;
           }
 
           @media (max-width: 900px) {
             .channels-columns {
               overflow-x: auto;
               scroll-snap-type: x mandatory;
-              gap: 0;
+              gap: 1rem;
+              padding: 1rem 0 2rem;
+              scrollbar-width: none;
+            }
+            .channels-columns::-webkit-scrollbar {
+              display: none;
             }
             .channels-column {
-              flex: 0 0 100%;
+              flex: 0 0 calc(100% - 2rem);
               scroll-snap-align: center;
+            }
+            .channels-article {
+              height: 450px;
             }
           }
 
           .channels-bullets {
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.55rem;
-            margin-block-start: 1.5rem;
+            gap: 0.75rem;
+            margin-block-start: 1rem;
           }
 
           .channels-bullet {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(226, 235, 224, 0.35);
-            background: rgba(226, 235, 224, 0.18);
+            width: 8px;
+            height: 8px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
             padding: 0;
             cursor: pointer;
+            transition: all 0.3s ease;
           }
 
           .channels-bullet.is-active {
-            background: rgba(28, 115, 4, 0.85);
-            border-color: rgba(28, 115, 4, 0.95);
+            width: 24px;
+            background: var(--color-accent);
           }
 
-          @media (max-width: 900px) {
+          @media (min-width: 901px) {
             .channels-bullets {
-              display: flex;
+              display: none;
             }
           }
         `}</style>
@@ -271,9 +349,14 @@ export function Channels() {
               className={`channels-column ${
                 activeChannelId === item.id ? " is-active" : " is-folded"
               }`}
+              data-id={item.id}
               initial={{ opacity: 0, y: 20 }}
               animate={controls}
-              onMouseEnter={() => setActiveChannelId(item.id)}
+              onMouseEnter={() => {
+                if (window.innerWidth > 900) {
+                  setActiveChannelId(item.id);
+                }
+              }}
               ref={(el) => {
                 columnRefs.current[item.id] = el;
               }}
@@ -293,22 +376,36 @@ export function Channels() {
                     backgroundImage: `url(${item.backgroundImage})`,
                     filter:
                       activeChannelId === item.id
-                        ? "grayscale(0) saturate(1) brightness(1)"
-                        : "grayscale(1) saturate(0.2) brightness(0.7)",
-                    opacity: activeChannelId === item.id ? 1 : 0.4,
+                        ? "grayscale(0) saturate(1.2) brightness(0.9)"
+                        : "grayscale(1) saturate(0) brightness(0.4)",
+                    opacity: activeChannelId === item.id ? 1 : 0.3,
                   }}
                 />
+                <div className="holographic-overlay" />
                 <div
                   aria-hidden
                   style={{
                     position: "absolute",
                     inset: 0,
-                    zIndex: 1,
+                    zIndex: 2,
                     background:
-                      "linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)",
+                      activeChannelId === item.id
+                        ? "linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.9) 100%)"
+                        : "linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%)",
                     pointerEvents: "none",
                   }}
                 />
+                {activeChannelId === item.id && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="absolute inset-0 z-1 pointer-events-none"
+                    style={{
+                      border: `1px solid ${item.accent}33`,
+                      boxShadow: `inset 0 0 40px ${item.accent}11`,
+                    }}
+                  />
+                )}
                 <ChannelCardForeground
                   item={item}
                   isActive={activeChannelId === item.id}
