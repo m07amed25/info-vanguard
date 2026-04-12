@@ -57,6 +57,28 @@ html {
   --tap-target-min: 44px;
 }
 
+:root {
+  --marquee-mask: 15%;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --marquee-mask: 10%;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --marquee-mask: 8%;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --marquee-mask: 5%;
+  }
+}
+
 *,
 *::before,
 *::after {

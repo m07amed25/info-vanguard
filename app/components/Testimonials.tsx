@@ -179,7 +179,7 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
     <div
       style={{
-        width: "min(350px, 85vw)",
+        width: "min(350px, 88vw)",
         padding: "1.5rem",
         borderRadius: "20px",
         background: "rgba(255, 255, 255, 0.03)",
@@ -190,7 +190,7 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
         gap: "1rem",
         minHeight: "280px",
         boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.3)",
-        margin: "0 0.75rem",
+        margin: "0 0.625rem",
         flexShrink: 0,
       }}
     >
@@ -393,9 +393,9 @@ export function Testimonials() {
           width: "100%",
           overflow: "hidden",
           maskImage:
-            "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+            "linear-gradient(to right, transparent, black var(--marquee-mask, 15%), black calc(100% - var(--marquee-mask, 15%)), transparent)",
           WebkitMaskImage:
-            "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+            "linear-gradient(to right, transparent, black var(--marquee-mask, 15%), black calc(100% - var(--marquee-mask, 15%)), transparent)",
         }}
         onMouseEnter={() => marqueeControls.stop()}
         onMouseLeave={() =>
@@ -447,8 +447,8 @@ export function Testimonials() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: "2rem",
+              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gap: "clamp(1rem, 2rem, 2.5rem)",
               textAlign: "center",
             }}
           >

@@ -365,6 +365,18 @@ export function Channels() {
                 activeChannelId === item.id ? " is-active" : " is-folded"
               }`}
               data-id={item.id}
+              ref={(el) => {
+                columnRefs.current[item.id] = el;
+              }}
+              onMouseEnter={() => {
+                if (window.innerWidth > 900) {
+                  setActiveChannelId(item.id);
+                }
+              }}
+              whileHover={{
+                y: -8,
+                transition: { duration: 0.3 },
+              }}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? "visible" : "hidden"}
               variants={{
@@ -374,25 +386,6 @@ export function Channels() {
                   transition: { duration: 0.5, delay: index * 0.1 },
                 },
                 hidden: { opacity: 0, y: 20 },
-              }}
-              whileHover={{ 
-                y: -8,
-                transition: { duration: 0.3 }
-              }}
-              onMouseEnter={() => {
-                if (window.innerWidth > 900) {
-                  setActiveChannelId(item.id);
-                }
-              }}
-              ref={(el) => {
-                columnRefs.current[item.id] = el;
-              }}
-              variants={{
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { duration: 0.5, delay: 0.15 + index * 0.08 },
-                },
               }}
             >
               <article className="channels-article">
