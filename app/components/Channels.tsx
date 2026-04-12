@@ -56,7 +56,7 @@ function ChannelCardForeground({
     >
       <motion.div layout className="flex items-center gap-4 mb-4">
         <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-md border border-white/10"
+          className="channels-icon-box w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-md border border-white/10 transition-all duration-300"
           style={{
             background: isActive
               ? `${item.accent}33`
@@ -69,7 +69,7 @@ function ChannelCardForeground({
             style={{ color: isActive ? item.accent : "#94a3b8" }}
           />
         </div>
-        <h3 className="text-xl font-semibold text-white leading-tight">
+        <h3 className="text-xl font-semibold text-white leading-tight transition-all duration-300">
           {item.title}
         </h3>
       </motion.div>
@@ -224,7 +224,7 @@ export function Channels() {
             position: relative;
             min-width: 0;
             flex: 1;
-            transition: flex 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease, background-color 0.3s ease;
             overflow: hidden;
             border-radius: 24px;
             cursor: pointer;
@@ -241,9 +241,23 @@ export function Channels() {
             .channels-column.is-folded {
               flex: 0.8;
             }
+            .channels-column:hover {
+              transform: translateY(-8px);
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px var(--color-accent-glow);
+              z-index: 5;
+            }
             .channels-column:hover:not(.is-active) {
               flex: 1;
-              background: #1e293b;
+              background: var(--color-bg-card);
+              border-color: rgba(28, 115, 4, 0.3);
+            }
+            .channels-column:hover .channels-card-fg h3 {
+              transform: translateX(4px);
+              color: var(--color-accent);
+            }
+            .channels-column:hover .channels-icon-box {
+              transform: scale(1.1) rotate(5deg);
+              box-shadow: 0 0 15px var(--color-accent-glow);
             }
           }
 
@@ -332,6 +346,7 @@ export function Channels() {
         `}</style>
 
         <motion.div
+          layout
           className="channels-columns"
           initial={{ opacity: 0, y: 24 }}
           animate={controls}
@@ -346,12 +361,24 @@ export function Channels() {
           {channelItems.map((item, index) => (
             <motion.div
               key={item.id}
-              className={`channels-column ${
+              className={`channels-column group ${
                 activeChannelId === item.id ? " is-active" : " is-folded"
               }`}
               data-id={item.id}
               initial={{ opacity: 0, y: 20 }}
-              animate={controls}
+              animate={isInView ? "visible" : "hidden"}
+              variants={{
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, delay: index * 0.1 },
+                },
+                hidden: { opacity: 0, y: 20 },
+              }}
+              whileHover={{ 
+                y: -8,
+                transition: { duration: 0.3 }
+              }}
               onMouseEnter={() => {
                 if (window.innerWidth > 900) {
                   setActiveChannelId(item.id);
@@ -369,32 +396,43 @@ export function Channels() {
               }}
             >
               <article className="channels-article">
-                <div
+                <motion.div
                   aria-hidden
                   className="channels-bg-layer"
-                  style={{
-                    backgroundImage: `url(${item.backgroundImage})`,
+                  animate={{
+                    scale: activeChannelId === item.id ? 1.1 : 1,
                     filter:
                       activeChannelId === item.id
-                        ? "grayscale(0) saturate(1.2) brightness(0.9)"
-                        : "grayscale(1) saturate(0) brightness(0.4)",
-                    opacity: activeChannelId === item.id ? 1 : 0.3,
+                        ? "grayscale(0) saturate(1.2) brightness(1.1)"
+                        : "grayscale(1) saturate(0) brightness(0.35)",
+                    opacity: activeChannelId === item.id ? 1 : 0.4,
+                  }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    backgroundImage: `url(${item.backgroundImage})`,
                   }}
                 />
                 <div className="holographic-overlay" />
-                <div
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    zIndex: 2,
-                    background:
-                      activeChannelId === item.id
-                        ? "linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.9) 100%)"
-                        : "linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%)",
-                    pointerEvents: "none",
-                  }}
-                />
+                <div className="absolute inset-0 z-2 pointer-events-none">
+                  {/* Default/Inactive Overlay */}
+                  <motion.div
+                    animate={{ opacity: activeChannelId === item.id ? 0 : 1 }}
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(10, 12, 10, 0.5) 0%, rgba(10, 12, 10, 0.85) 100%)",
+                    }}
+                  />
+                  {/* Active Overlay */}
+                  <motion.div
+                    animate={{ opacity: activeChannelId === item.id ? 1 : 0 }}
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, transparent 0%, rgba(10, 12, 10, 0) 40%, rgba(10, 12, 10, 0.95) 100%)",
+                    }}
+                  />
+                </div>
                 {activeChannelId === item.id && (
                   <motion.div
                     initial={{ opacity: 0 }}
