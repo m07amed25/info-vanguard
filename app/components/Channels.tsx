@@ -53,7 +53,10 @@ function subscribeChannelsDesktopMq(cb: () => void) {
 }
 
 function getChannelsDesktopMq(): boolean {
-  return typeof window !== "undefined" && window.matchMedia(CHANNELS_DESKTOP_MQ).matches;
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia(CHANNELS_DESKTOP_MQ).matches
+  );
 }
 
 function titleFoldedPreview(title: string): string {
@@ -62,7 +65,11 @@ function titleFoldedPreview(title: string): string {
 }
 
 function useChannelsDesktopLayout(): boolean {
-  return useSyncExternalStore(subscribeChannelsDesktopMq, getChannelsDesktopMq, () => false);
+  return useSyncExternalStore(
+    subscribeChannelsDesktopMq,
+    getChannelsDesktopMq,
+    () => false,
+  );
 }
 
 function ChannelCardForeground({
