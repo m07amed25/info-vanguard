@@ -88,8 +88,7 @@ const filters = [
   "Security Overview",
 ];
 
-const HOVER_SCROLL_DELAY_MS = 500;
-const AUTO_SLIDE_MS = 1000;
+const FEATURES_MARQUEE_DURATION_S = 48;
 
 function FeatureCardInner({
   feature,
@@ -208,15 +207,10 @@ function FeatureCardInner({
 
 export function Features() {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [trackTranslatePx, setTrackTranslatePx] = useState<number | null>(null);
   const ref = useRef<HTMLElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const hoverScrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pauseAutoSlideRef = useRef(false);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const controls = useAnimation();
+  const marqueeControls = useAnimation();
 
   useEffect(() => {
     if (isInView) {
@@ -230,81 +224,22 @@ export function Features() {
       : featuresData.filter((f) => f.filter === activeFilter);
 
   useEffect(() => {
-    setCarouselIndex(0);
-  }, [activeFilter]);
-
-  const maxIndex = Math.max(0, filteredFeatures.length - 3);
-  const goPrev = () =>
-    setCarouselIndex((i) => Math.max(0, i - 1));
-  const goNext = () =>
-    setCarouselIndex((i) => Math.min(maxIndex, i + 1));
-
-  const clearHoverScroll = () => {
-    if (hoverScrollRef.current) {
-      clearTimeout(hoverScrollRef.current);
-      hoverScrollRef.current = null;
-    }
-  };
-
-  const onCardMouseEnter = (index: number) => {
-    clearHoverScroll();
-    const isRightCard = index === carouselIndex + 2;
-    const isLeftCard = index === carouselIndex;
-    if (isRightCard && carouselIndex < maxIndex) {
-      hoverScrollRef.current = setTimeout(goNext, HOVER_SCROLL_DELAY_MS);
-    } else if (isLeftCard && carouselIndex > 0) {
-      hoverScrollRef.current = setTimeout(goPrev, HOVER_SCROLL_DELAY_MS);
-    }
-  };
-
-  const onCardMouseLeave = () => clearHoverScroll();
-
-  const onChevronMouseEnter = (direction: "prev" | "next") => {
-    clearHoverScroll();
-    if (direction === "prev" && carouselIndex > 0) {
-      hoverScrollRef.current = setTimeout(goPrev, HOVER_SCROLL_DELAY_MS);
-    } else if (direction === "next" && carouselIndex < maxIndex) {
-      hoverScrollRef.current = setTimeout(goNext, HOVER_SCROLL_DELAY_MS);
-    }
-  };
-
-  useEffect(() => () => clearHoverScroll(), []);
-
-  useEffect(() => {
-    const viewport = viewportRef.current;
-    const track = trackRef.current;
-    const n = filteredFeatures.length;
-    if (!viewport || !track || n === 0) return;
-    const update = () => {
-      const gapStr = getComputedStyle(track).gap?.trim().split(/\s+/)[0] || getComputedStyle(track).columnGap || "16px";
-      const gapPx = parseFloat(gapStr) || 16;
-      const vw = viewport.getBoundingClientRect().width;
-      const trackWidth = track.getBoundingClientRect().width;
-      const scrollWidth = track.scrollWidth;
-      const stepPx = trackWidth / n + gapPx;
-      const maxTranslatePx = Math.max(0, scrollWidth - vw);
-      const translatePx = Math.min(carouselIndex * stepPx, maxTranslatePx);
-      setTrackTranslatePx(translatePx);
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(viewport);
-    ro.observe(track);
-    return () => ro.disconnect();
-  }, [carouselIndex, activeFilter, filteredFeatures.length]);
-
-  useEffect(() => {
-    if (activeFilter !== "All" || !isInView || maxIndex <= 0) return;
+    if (!isInView || activeFilter !== "All") return;
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
-    const tick = () => {
-      if (pauseAutoSlideRef.current) return;
-      setCarouselIndex((i) => (i >= maxIndex ? 0 : i + 1));
-    };
-    const id = window.setInterval(tick, AUTO_SLIDE_MS);
-    return () => window.clearInterval(id);
-  }, [isInView, maxIndex, activeFilter, filteredFeatures.length]);
+    marqueeControls.start({
+      x: ["0%", "-50%"],
+      transition: {
+        duration: FEATURES_MARQUEE_DURATION_S,
+        repeat: Infinity,
+        ease: "linear",
+      },
+    });
+  }, [isInView, activeFilter, marqueeControls, filteredFeatures.length]);
+
+  const featuresMarquee =
+    activeFilter === "All" ? [...featuresData, ...featuresData] : [];
 
   return (
     <section
@@ -365,6 +300,7 @@ export function Features() {
           {filters.map((filter) => (
             <li key={filter} role="none">
               <button
+                id={`features-${filter.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-tab`}
                 role="tab"
                 aria-selected={activeFilter === filter}
                 aria-controls="features-panel"
@@ -444,22 +380,6 @@ export function Features() {
               ) !important;
             }
           }
-          .features-carousel-track {
-            display: flex;
-            gap: var(--features-gap, clamp(1.25rem, 2.5vw, 2rem));
-            transition: transform 0.4s ease-out;
-            will-change: transform;
-          }
-          .features-carousel-card {
-            flex: 0 0 calc(100% / var(--cards, 8));
-            min-width: 0;
-          }
-          .features-carousel-spacer {
-            flex: 0 0 calc(100% / var(--cards, 8));
-            min-width: 0;
-            flex-shrink: 0;
-            pointer-events: none;
-          }
           .features-grid {
             display: grid;
             width: 100%;
@@ -472,30 +392,6 @@ export function Features() {
               )
             );
             justify-content: start;
-          }
-          .features-carousel-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            border: none;
-            border-radius: 0;
-            background: transparent;
-            color: var(--color-text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-            transition: color 0.2s ease;
-          }
-          .features-carousel-arrow:hover:not(:disabled) {
-            color: var(--color-accent);
-          }
-          .features-carousel-arrow:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
           }
           @media (max-width: 768px) {
             .our-work-filters {
@@ -512,13 +408,6 @@ export function Features() {
             .our-work-filters li {
               flex-shrink: 0;
             }
-            .features-carousel-card {
-              flex: 0 0 calc(100% / var(--cards-mobile, 4));
-            }
-            .features-carousel-arrow {
-              width: 40px;
-              height: 40px;
-            }
             .features-grid {
               grid-template-columns: repeat(
                 auto-fill,
@@ -530,111 +419,91 @@ export function Features() {
             }
           }
           @media (max-width: 640px) {
-            .features-carousel-card {
-              flex: 0 0 100%;
-            }
             .features-grid {
               grid-template-columns: 1fr;
             }
           }
         `}</style>
+      </div>
 
+      {activeFilter === "All" ? (
         <div
           id="features-panel"
           role="tabpanel"
-          aria-labelledby={`${activeFilter.toLowerCase()}-tab`}
-          className="features-carousel"
-          onMouseEnter={() => {
-            pauseAutoSlideRef.current = true;
-          }}
-          onMouseLeave={() => {
-            pauseAutoSlideRef.current = false;
-          }}
+          aria-labelledby={`features-${activeFilter.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-tab`}
+          className="features-marquee-wrap"
           style={{
-            position: "relative",
             width: "100%",
             overflow: "hidden",
-            paddingInline: "clamp(0.5rem, 2vw, 1rem)",
             ["--features-gap" as string]: "clamp(1.25rem, 2.5vw, 2rem)",
-            ["--carousel-chevron-gutter" as string]:
-              "clamp(1.35rem, 4.5vw, 2.75rem)",
+            maskImage:
+              "linear-gradient(to right, transparent, black var(--marquee-mask, 12%), black calc(100% - var(--marquee-mask, 12%)), transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent, black var(--marquee-mask, 12%), black calc(100% - var(--marquee-mask, 12%)), transparent)",
+          }}
+          onMouseEnter={() => marqueeControls.stop()}
+          onMouseLeave={() => {
+            if (
+              typeof window !== "undefined" &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ) {
+              return;
+            }
+            marqueeControls.start({
+              x: ["0%", "-50%"],
+              transition: {
+                duration: FEATURES_MARQUEE_DURATION_S,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            });
           }}
         >
-          {activeFilter === "All" ? (
-            <>
-              <button
-                type="button"
-                className="features-carousel-arrow"
-                aria-label="Previous features"
-                onClick={goPrev}
-                disabled={carouselIndex === 0}
-                style={{ left: 0 }}
-                onMouseEnter={() => onChevronMouseEnter("prev")}
-                onMouseLeave={onCardMouseLeave}
-              >
-                <i className="fa-solid fa-chevron-left" />
-              </button>
-              <button
-                type="button"
-                className="features-carousel-arrow"
-                aria-label="Next features"
-                onClick={goNext}
-                disabled={carouselIndex >= maxIndex}
-                style={{ right: 0 }}
-                onMouseEnter={() => onChevronMouseEnter("next")}
-                onMouseLeave={onCardMouseLeave}
-              >
-                <i className="fa-solid fa-chevron-right" />
-              </button>
-
-              <div
-                ref={viewportRef}
-                className="features-carousel-viewport"
-                style={{
-                  overflow: "hidden",
-                  width:
-                    "calc(100% - 2 * var(--carousel-chevron-gutter, 1.35rem))",
-                  marginInline: "auto",
-                }}
-              >
+          <motion.div
+            style={{
+              display: "flex",
+              width: "fit-content",
+              gap: "var(--features-gap, clamp(1.25rem, 2.5vw, 2rem))",
+            }}
+            animate={marqueeControls}
+          >
+            {featuresMarquee.map((feature, idx) => {
+              const baseIndex = idx % featuresData.length;
+              return (
                 <div
-                  ref={trackRef}
-                  className="features-carousel-track"
+                  key={`${feature.id}-marquee-${idx}`}
                   style={{
-                    "--cards": filteredFeatures.length,
-                    "--cards-mobile": Math.min(4, Math.max(2, filteredFeatures.length)),
-                    transform: trackTranslatePx !== null ? `translateX(-${trackTranslatePx}px)` : `translateX(-${carouselIndex * (100 / Math.max(1, filteredFeatures.length))}%)`,
-                    width: filteredFeatures.length ? `calc(${(filteredFeatures.length / 3) * 100}% - ${(2 * filteredFeatures.length / 3)} * var(--features-gap, 1rem))` : "100%",
-                  } as React.CSSProperties}
+                    width: "min(340px, 88vw)",
+                    flexShrink: 0,
+                  }}
                 >
-                  {filteredFeatures.map((feature, index) => (
-                    <div
-                      key={`${activeFilter}-${feature.id}`}
-                      className="features-carousel-card"
-                      onMouseEnter={() => onCardMouseEnter(index)}
-                      onMouseLeave={onCardMouseLeave}
-                    >
-                      <FeatureCardInner feature={feature} index={index} />
-                    </div>
-                  ))}
-                  <div
-                    className="features-carousel-spacer"
-                    aria-hidden
-                  />
+                  <FeatureCardInner feature={feature} index={baseIndex} />
                 </div>
-              </div>
-            </>
-          ) : (
-            <div className="features-grid">
-              {filteredFeatures.map((feature, index) => (
-                <div key={`${activeFilter}-${feature.id}`}>
-                  <FeatureCardInner feature={feature} index={index} />
-                </div>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </motion.div>
         </div>
+      ) : (
+        <div
+          className="container"
+          style={{ ["--features-gap" as string]: "clamp(1.25rem, 2.5vw, 2rem)" }}
+        >
+          <div
+            id="features-panel"
+            role="tabpanel"
+            aria-labelledby={`features-${activeFilter.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-tab`}
+            className="features-grid"
+          >
+            {filteredFeatures.map((feature, index) => (
+              <div key={`${activeFilter}-${feature.id}`}>
+                <FeatureCardInner feature={feature} index={index} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
+      <div className="container">
         <motion.div
           className="features-cta"
           initial={{ opacity: 0, y: 20 }}

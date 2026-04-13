@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
 
 const whyItems = [
@@ -41,19 +41,13 @@ const whyItems = [
 
 ];
 
-const HOVER_SCROLL_DELAY_MS = 500;
-const AUTO_SLIDE_MS = 1000;
+const MARQUEE_DURATION_S = 42;
 
 export function WhyUs() {
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [trackTranslatePx, setTrackTranslatePx] = useState<number | null>(null);
   const ref = useRef<HTMLElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const hoverScrollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pauseAutoSlideRef = useRef(false);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const controls = useAnimation();
+  const marqueeControls = useAnimation();
 
   useEffect(() => {
     if (isInView) {
@@ -61,77 +55,22 @@ export function WhyUs() {
     }
   }, [isInView, controls]);
 
-  const maxIndex = Math.max(0, whyItems.length - 3);
-  const goPrev = () => setCarouselIndex((i) => Math.max(0, i - 1));
-  const goNext = () =>
-    setCarouselIndex((i) => Math.min(maxIndex, i + 1));
-
-  const clearHoverScroll = () => {
-    if (hoverScrollRef.current) {
-      clearTimeout(hoverScrollRef.current);
-      hoverScrollRef.current = null;
-    }
-  };
-
-  const onCardMouseEnter = (index: number) => {
-    clearHoverScroll();
-    const isRightCard = index === carouselIndex + 2;
-    const isLeftCard = index === carouselIndex;
-    if (isRightCard && carouselIndex < maxIndex) {
-      hoverScrollRef.current = setTimeout(goNext, HOVER_SCROLL_DELAY_MS);
-    } else if (isLeftCard && carouselIndex > 0) {
-      hoverScrollRef.current = setTimeout(goPrev, HOVER_SCROLL_DELAY_MS);
-    }
-  };
-
-  const onCardMouseLeave = () => clearHoverScroll();
-
-  const onChevronMouseEnter = (direction: "prev" | "next") => {
-    clearHoverScroll();
-    if (direction === "prev" && carouselIndex > 0) {
-      hoverScrollRef.current = setTimeout(goPrev, HOVER_SCROLL_DELAY_MS);
-    } else if (direction === "next" && carouselIndex < maxIndex) {
-      hoverScrollRef.current = setTimeout(goNext, HOVER_SCROLL_DELAY_MS);
-    }
-  };
-
-  useEffect(() => () => clearHoverScroll(), []);
-
   useEffect(() => {
-    const viewport = viewportRef.current;
-    const track = trackRef.current;
-    if (!viewport || !track) return;
-    const update = () => {
-      const gapStr = getComputedStyle(track).gap?.trim().split(/\s+/)[0] || getComputedStyle(track).columnGap || "16px";
-      const gapPx = parseFloat(gapStr) || 16;
-      const vw = viewport.getBoundingClientRect().width;
-      const trackWidth = track.getBoundingClientRect().width;
-      const scrollWidth = track.scrollWidth;
-      const n = whyItems.length;
-      const stepPx = trackWidth / n + gapPx;
-      const maxTranslatePx = Math.max(0, scrollWidth - vw);
-      const translatePx = Math.min(carouselIndex * stepPx, maxTranslatePx);
-      setTrackTranslatePx(translatePx);
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(viewport);
-    ro.observe(track);
-    return () => ro.disconnect();
-  }, [carouselIndex]);
-
-  useEffect(() => {
-    if (!isInView || maxIndex <= 0) return;
+    if (!isInView) return;
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
-    const tick = () => {
-      if (pauseAutoSlideRef.current) return;
-      setCarouselIndex((i) => (i >= maxIndex ? 0 : i + 1));
-    };
-    const id = window.setInterval(tick, AUTO_SLIDE_MS);
-    return () => window.clearInterval(id);
-  }, [isInView, maxIndex]);
+    marqueeControls.start({
+      x: ["0%", "-50%"],
+      transition: {
+        duration: MARQUEE_DURATION_S,
+        repeat: Infinity,
+        ease: "linear",
+      },
+    });
+  }, [isInView, marqueeControls]);
+
+  const whyMarquee = [...whyItems, ...whyItems];
 
   return (
     <section
@@ -165,223 +104,129 @@ export function WhyUs() {
         >
           Why Users Stick With Us
         </motion.h2>
+      </div>
 
-        <style>{`
-          .why-us-carousel-track {
-            display: flex;
-            gap: var(--why-gap, clamp(1rem, 3vw, 2rem));
-            transition: transform 0.4s ease-out;
-            will-change: transform;
-          }
-          .why-us-carousel-card {
-            flex: 0 0 calc(100% / var(--why-cards, 6));
-            min-width: 0;
-            min-height: 200px;
-            display: flex;
-          }
-          .why-us-carousel-spacer {
-            flex: 0 0 calc(100% / var(--why-cards, 6));
-            min-width: 0;
-            flex-shrink: 0;
-            pointer-events: none;
-          }
-          .why-us-carousel-card .why-item {
-            min-height: 200px;
-            height: 100%;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-          }
-          .why-us-carousel-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            border: none;
-            border-radius: 0;
-            background: transparent;
-            color: var(--color-text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-            transition: color 0.2s ease;
-          }
-          .why-us-carousel-arrow:hover:not(:disabled) {
-            color: var(--color-accent);
-          }
-          .why-us-carousel-arrow:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-          }
-          @media (max-width: 768px) {
-            .why-us-carousel-card {
-              flex: 0 0 calc(100% / var(--why-cards-mobile, 2));
-            }
-            .why-us-carousel-spacer {
-              flex: 0 0 calc(100% / var(--why-cards-mobile, 2));
-            }
-            .why-us-carousel-arrow {
-              width: 40px;
-              height: 40px;
-            }
-          }
-          @media (max-width: 640px) {
-            .why-us-carousel-card {
-              flex: 0 0 100%;
-            }
-            .why-us-carousel-spacer {
-              flex: 0 0 100%;
-            }
-          }
-        `}</style>
-
-        <div
-          className="why-us-carousel"
-          onMouseEnter={() => {
-            pauseAutoSlideRef.current = true;
+      <div
+        className="why-us-marquee-wrap"
+        style={{
+          width: "100%",
+          overflow: "hidden",
+          maskImage:
+              "linear-gradient(to right, transparent, black var(--marquee-mask, 12%), black calc(100% - var(--marquee-mask, 12%)), transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent, black var(--marquee-mask, 12%), black calc(100% - var(--marquee-mask, 12%)), transparent)",
           }}
+          onMouseEnter={() => marqueeControls.stop()}
           onMouseLeave={() => {
-            pauseAutoSlideRef.current = false;
-          }}
-          style={{
-            position: "relative",
-            width: "100%",
-            overflow: "hidden",
-            paddingInline: "clamp(0.5rem, 2vw, 1rem)",
-            ["--why-gap" as string]: "clamp(1rem, 3vw, 2rem)",
-            ["--carousel-chevron-gutter" as string]:
-              "clamp(1.35rem, 4.5vw, 2.75rem)",
+            if (
+              typeof window !== "undefined" &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ) {
+              return;
+            }
+            marqueeControls.start({
+              x: ["0%", "-50%"],
+              transition: {
+                duration: MARQUEE_DURATION_S,
+                repeat: Infinity,
+                ease: "linear",
+              },
+            });
           }}
         >
-          <button
-            type="button"
-            className="why-us-carousel-arrow"
-            aria-label="Previous"
-            onClick={goPrev}
-            disabled={carouselIndex === 0}
-            style={{ left: 0 }}
-            onMouseEnter={() => onChevronMouseEnter("prev")}
-            onMouseLeave={onCardMouseLeave}
-          >
-            <i className="fa-solid fa-chevron-left" />
-          </button>
-          <button
-            type="button"
-            className="why-us-carousel-arrow"
-            aria-label="Next"
-            onClick={goNext}
-            disabled={carouselIndex >= maxIndex}
-            style={{ right: 0 }}
-            onMouseEnter={() => onChevronMouseEnter("next")}
-            onMouseLeave={onCardMouseLeave}
-          >
-            <i className="fa-solid fa-chevron-right" />
-          </button>
-
-          <div
-            ref={viewportRef}
-            className="why-us-carousel-viewport"
+          <motion.div
             style={{
-              overflow: "hidden",
-              width:
-                "calc(100% - 2 * var(--carousel-chevron-gutter, 1.35rem))",
-              marginInline: "auto",
+              display: "flex",
+              width: "fit-content",
+              gap: "1.25rem",
+              alignItems: "stretch",
             }}
+            animate={marqueeControls}
           >
-            <div
-              ref={trackRef}
-              className="why-us-carousel-track"
-              style={{
-                "--why-cards": whyItems.length,
-                "--why-cards-mobile": Math.min(4, Math.max(2, whyItems.length)),
-                transform: trackTranslatePx !== null ? `translateX(-${trackTranslatePx}px)` : `translateX(-${carouselIndex * (100 / Math.max(1, whyItems.length))}%)`,
-                width: `calc(${(whyItems.length / 3) * 100}% - ${(2 * whyItems.length / 3)} * var(--why-gap, 1rem))`,
-              } as React.CSSProperties}
-            >
-              {whyItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="why-us-carousel-card"
-                  onMouseEnter={() => onCardMouseEnter(index)}
-                  onMouseLeave={onCardMouseLeave}
+            {whyMarquee.map((item, idx) => (
+              <div
+                key={`${item.number}-${idx}`}
+                style={{
+                  width: "min(340px, 88vw)",
+                  flexShrink: 0,
+                  display: "flex",
+                }}
+              >
+                <motion.article
+                  className="why-item"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={controls}
+                  variants={{
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.5, delay: (idx % whyItems.length) * 0.08 },
+                    },
+                  }}
+                  whileHover={{
+                    scale: 1.02,
+                    zIndex: 10,
+                    boxShadow: "0 8px 24px rgba(28, 115, 4, 0.2)",
+                  }}
+                  transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+                  style={{
+                    background: "var(--color-bg-card)",
+                    borderRadius: "var(--radius-lg)",
+                    border: "1px solid var(--color-border)",
+                    padding: "clamp(1.25rem, 4vw, 2rem)",
+                    position: "relative",
+                    overflow: "hidden",
+                    boxSizing: "border-box",
+                    width: "100%",
+                    flex: 1,
+                    minHeight: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
                 >
-                  <motion.article
-                    className="why-item"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={controls}
-                    variants={{
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                        transition: { duration: 0.5, delay: index * 0.1 },
-                      },
-                    }}
-                    whileHover={{
-                      scale: 1.02,
-                      zIndex: 10,
-                      boxShadow: "0 8px 24px rgba(28, 115, 4, 0.2)",
-                    }}
-                    transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+                  <span
                     style={{
-                      background: "var(--color-bg-card)",
-                      borderRadius: "var(--radius-lg)",
-                      border: "1px solid var(--color-border)",
-                      padding: "clamp(1.25rem, 4vw, 2rem)",
+                      fontSize: "clamp(2.5rem, 6vw, 4rem)",
+                      fontWeight: 700,
+                      color: "var(--color-accent)",
+                      opacity: 0.3,
+                      position: "absolute",
+                      top: "0.25rem",
+                      insetInlineEnd: "0.5rem",
+                      fontFamily: "var(--font-gargoyles)",
+                      lineHeight: 1,
+                    }}
+                    aria-hidden="true"
+                  >
+                    {item.number}
+                  </span>
+                  <h3
+                    style={{
+                      fontSize: "clamp(1.125rem, 2.5vw, 1.375rem)",
+                      fontWeight: 600,
+                      marginBlockEnd: "0.75rem",
+                      color: "var(--color-text)",
                       position: "relative",
-                      overflow: "hidden",
-                      minHeight: "200px",
-                      boxSizing: "border-box",
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: "clamp(2.5rem, 6vw, 4rem)",
-                        fontWeight: 700,
-                        color: "var(--color-accent)",
-                        opacity: 0.3,
-                        position: "absolute",
-                        top: "0.25rem",
-                        insetInlineEnd: "0.5rem",
-                        fontFamily: "var(--font-gargoyles)",
-                        lineHeight: 1,
-                      }}
-                      aria-hidden="true"
-                    >
-                      {item.number}
-                    </span>
-                    <h3
-                      style={{
-                        fontSize: "clamp(1.125rem, 2.5vw, 1.375rem)",
-                        fontWeight: 600,
-                        marginBlockEnd: "0.75rem",
-                        color: "var(--color-text)",
-                        position: "relative",
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      style={{
-                        color: "var(--color-text-muted)",
-                        lineHeight: 1.6,
-                        margin: 0,
-                        fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
-                        position: "relative",
-                      }}
-                    >
-                      {item.description}
-                    </p>
-                  </motion.article>
-                </div>
-              ))}
-              <div className="why-us-carousel-spacer" aria-hidden />
-            </div>
-          </div>
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{
+                      color: "var(--color-text-muted)",
+                      lineHeight: 1.6,
+                      margin: 0,
+                      fontSize: "clamp(0.9rem, 1.5vw, 1rem)",
+                      position: "relative",
+                    }}
+                  >
+                    {item.description}
+                  </p>
+                </motion.article>
+              </div>
+            ))}
+          </motion.div>
         </div>
-      </div>
     </section>
   );
 }

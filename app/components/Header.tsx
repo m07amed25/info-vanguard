@@ -379,7 +379,9 @@ export function Header() {
         @media (max-width: 768px) {
           .nav-toggle { display: flex !important; }
           .nav-links, .nav-cta { display: none !important; }
-          .nav-logo-text { display: none !important; }
+          .nav-logo-text {
+            padding-top: 0.7rem;
+          }
         }
         @media (min-width: 769px) {
           .nav-toggle { display: none !important; }

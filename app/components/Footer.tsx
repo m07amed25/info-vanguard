@@ -153,13 +153,36 @@ export function Footer() {
             gap: 0.25rem 0.5rem;
             padding-top: 1rem;
           }
+        }
+
+        /* Newsletter: stack below ~720px — overrides inline absolute layout */
+        @media (max-width: 720px) {
           .footer-newsletter-form {
-            flex-direction: column;
-            gap: 0.75rem !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            min-height: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            gap: 0.625rem !important;
+            padding: 0 !important;
           }
-          .footer-newsletter-form input,
-          .footer-newsletter-form button {
-            width: 100%;
+          .footer-newsletter-form .footer-newsletter-input {
+            padding: 0.75rem 1rem !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            background: var(--color-bg) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: var(--radius) !important;
+          }
+          .footer-newsletter-form .footer-newsletter-submit {
+            position: static !important;
+            top: auto !important;
+            right: auto !important;
+            bottom: auto !important;
+            width: 100% !important;
+            min-height: 44px !important;
+            box-sizing: border-box !important;
+            border-radius: var(--radius) !important;
           }
         }
         
@@ -369,14 +392,15 @@ export function Footer() {
             >
               <input
                 type="email"
+                className="footer-newsletter-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
                 style={{
-                  padding: "0.75rem 1rem 0.75rem 1rem",
-                  paddingRight: "6.5rem",
-                  fontSize: "0.95rem",
+                  padding: "0.75rem 1rem",
+                  paddingRight: "clamp(5.5rem, 28vw, 6.5rem)",
+                  fontSize: "clamp(0.875rem, 2.8vw, 0.95rem)",
                   fontFamily: "var(--font-sans)",
                   background: "transparent",
                   border: "none",
@@ -386,6 +410,7 @@ export function Footer() {
                   flex: "1 1 0",
                   minWidth: "0",
                   minHeight: "42px",
+                  boxSizing: "border-box",
                 }}
                 onFocus={(e) =>
                   (e.target.parentElement!.style.borderColor =
@@ -398,13 +423,14 @@ export function Footer() {
               />
               <button
                 type="submit"
+                className="footer-newsletter-submit"
                 style={{
                   position: "absolute",
                   top: "4px",
                   right: "4px",
                   bottom: "4px",
-                  padding: "0 1rem",
-                  fontSize: "0.9rem",
+                  padding: "0 clamp(0.65rem, 2.5vw, 1rem)",
+                  fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
                   fontWeight: 600,
                   background: "var(--color-accent)",
                   color: "#fff",
@@ -413,6 +439,9 @@ export function Footer() {
                   cursor: "pointer",
                   transition: "background-color 0.2s ease",
                   whiteSpace: "nowrap",
+                  maxWidth: "calc(100% - 8px)",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.backgroundColor =

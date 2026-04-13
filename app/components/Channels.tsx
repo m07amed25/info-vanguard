@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   motion,
   useInView,
@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 
 const DESKTOP_BG = "/assets/desktop.png";
-const WEBSITE_BG = "/assets/website.png";
+const WEBSITE_BG = "/assets/website.jpg";
 const EXTENSIONS_BG = "/assets/extension.jpg";
 
 const CHANNELS_FLEX_TRANSITION_MS = 600;
@@ -34,7 +34,7 @@ const channelItems = [
   },
   {
     id: "extensions",
-    title: "Protection inside apps",
+    title: "Protect your apps",
     icon: "fa-solid fa-puzzle-piece",
     accent: "#8b5cf6",
     description:
@@ -43,6 +43,28 @@ const channelItems = [
   },
 ] as const;
 
+const CHANNELS_DESKTOP_MQ = "(min-width: 901px)";
+
+function subscribeChannelsDesktopMq(cb: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia(CHANNELS_DESKTOP_MQ);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+
+function getChannelsDesktopMq(): boolean {
+  return typeof window !== "undefined" && window.matchMedia(CHANNELS_DESKTOP_MQ).matches;
+}
+
+function titleFoldedPreview(title: string): string {
+  const first = title.trim().split(/\s+/)[0] ?? "";
+  return first ? `${first}...` : title;
+}
+
+function useChannelsDesktopLayout(): boolean {
+  return useSyncExternalStore(subscribeChannelsDesktopMq, getChannelsDesktopMq, () => false);
+}
+
 function ChannelCardForeground({
   item,
   isActive,
@@ -50,13 +72,20 @@ function ChannelCardForeground({
   item: (typeof channelItems)[number];
   isActive: boolean;
 }) {
+  const desktopLayout = useChannelsDesktopLayout();
+  const titleDisplay =
+    desktopLayout && !isActive ? titleFoldedPreview(item.title) : item.title;
+
   return (
     <div
-      className={`channels-card-fg transition-all duration-500 flex flex-col justify-end p-6 h-full z-10 relative ${isActive ? "opacity-100" : "opacity-80"}`}
+      className={`channels-card-fg transition-all duration-500 flex flex-col justify-end p-4 max-[900px]:pb-5 min-[901px]:p-6 h-full z-10 relative ${isActive ? "opacity-100" : "opacity-80"}`}
     >
-      <motion.div layout className="flex items-center gap-4 mb-4">
+      <motion.div
+        layout
+        className="channels-fg-header flex flex-col min-[901px]:flex-row min-[901px]:items-center gap-3 min-[901px]:gap-4 mb-3 min-[901px]:mb-4"
+      >
         <div
-          className="channels-icon-box w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-md border border-white/10 transition-all duration-300"
+          className="channels-icon-box w-8 h-8 min-[901px]:w-12 min-[901px]:h-12 shrink-0 rounded-xl flex items-center justify-center backdrop-blur-md border border-white/10 transition-all duration-300"
           style={{
             background: isActive
               ? `${item.accent}33`
@@ -69,8 +98,11 @@ function ChannelCardForeground({
             style={{ color: isActive ? item.accent : "#94a3b8" }}
           />
         </div>
-        <h3 className="text-xl font-semibold text-white leading-tight transition-all duration-300">
-          {item.title}
+        <h3
+          className="text-lg min-[901px]:text-xl font-semibold text-white leading-tight transition-all duration-300"
+          {...(desktopLayout && !isActive ? { "aria-label": item.title } : {})}
+        >
+          {titleDisplay}
         </h3>
       </motion.div>
 
@@ -83,7 +115,7 @@ function ChannelCardForeground({
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="overflow-hidden"
       >
-        <p className="text-slate-300 text-sm leading-relaxed mb-4">
+        <p className="text-slate-300 text-sm max-[900px]:text-[0.8125rem] leading-relaxed mb-0 min-[901px]:mb-4">
           {item.description}
         </p>
       </motion.div>
@@ -185,7 +217,7 @@ export function Channels() {
       aria-labelledby="channels-heading"
       ref={ref}
       style={{
-        padding: "var(--spacing-section) 0",
+        padding: "clamp(2.5rem, 8vw, var(--spacing-section)) 0",
         position: "relative",
         overflow: "hidden",
       }}
@@ -200,9 +232,9 @@ export function Channels() {
             visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
           }}
           style={{
-            fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+            fontSize: "clamp(1.35rem, 4.2vw, 2.25rem)",
             fontWeight: 600,
-            marginBlockEnd: "2.5rem",
+            marginBlockEnd: "clamp(1.25rem, 4vw, 2.5rem)",
             letterSpacing: "0.04em",
             textAlign: "center",
             position: "relative",
@@ -239,7 +271,7 @@ export function Channels() {
               box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             }
             .channels-column.is-folded {
-              flex: 0.8;
+              flex: 1.15;
             }
             .channels-column:hover {
               transform: translateY(-8px);
@@ -247,7 +279,7 @@ export function Channels() {
               z-index: 5;
             }
             .channels-column:hover:not(.is-active) {
-              flex: 1;
+              flex: 1.65;
               background: var(--color-bg-card);
               border-color: rgba(28, 115, 4, 0.3);
             }
@@ -258,6 +290,22 @@ export function Channels() {
             .channels-column:hover .channels-icon-box {
               transform: scale(1.1) rotate(5deg);
               box-shadow: 0 0 15px var(--color-accent-glow);
+            }
+
+            /* Folded strips: icon + title aligned to the left */
+            .channels-column.is-folded .channels-card-fg {
+              align-items: flex-end;
+              
+            }
+            .channels-column.is-folded .channels-fg-header {
+              flex-direction: row;
+              justify-content: flex-end;
+              width: 100%;
+              
+            }
+            .channels-column.is-folded .channels-card-fg h3 {
+              text-align: left;
+              overflow: hidden;
             }
           }
 
@@ -295,22 +343,45 @@ export function Channels() {
           }
 
           @media (max-width: 900px) {
+            .channels-scroll-bleed {
+              width: calc(100% + 2 * var(--spacing-container));
+              max-width: 100vw;
+              margin-inline: calc(-1 * var(--spacing-container));
+              padding-inline: var(--spacing-container);
+              padding-inline-start: max(var(--spacing-container), env(safe-area-inset-left, 0px));
+              padding-inline-end: max(var(--spacing-container), env(safe-area-inset-right, 0px));
+              box-sizing: border-box;
+            }
+
             .channels-columns {
               overflow-x: auto;
               scroll-snap-type: x mandatory;
-              gap: 1rem;
-              padding: 1rem 0 2rem;
+              gap: clamp(0.5rem, 2vw, 0.75rem);
+              padding: clamp(0.5rem, 2vw, 0.75rem) 0 clamp(1rem, 3vw, 1.5rem);
               scrollbar-width: none;
+              -webkit-overflow-scrolling: touch;
             }
             .channels-columns::-webkit-scrollbar {
               display: none;
             }
             .channels-column {
-              flex: 0 0 calc(100% - 2rem);
+              flex: 0 0 min(100%, calc(100vw - 2.5rem));
+              max-width: min(100%, calc(100vw - 2.5rem));
               scroll-snap-align: center;
+              border-radius: clamp(14px, 4vw, 24px);
             }
             .channels-article {
-              height: 450px;
+              height: clamp(280px, 62dvh, 440px);
+            }
+          }
+
+          @media (max-width: 480px) {
+            .channels-column {
+              flex-basis: min(100%, calc(100vw - 2rem));
+              max-width: min(100%, calc(100vw - 2rem));
+            }
+            .channels-article {
+              height: clamp(260px, 56dvh, 400px);
             }
           }
 
@@ -318,24 +389,52 @@ export function Channels() {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.75rem;
-            margin-block-start: 1rem;
+            gap: 0.3rem;
+            margin-block-start: 0.75rem;
           }
 
           .channels-bullet {
-            width: 8px;
-            height: 8px;
+            box-sizing: content-box;
+            width: 4px;
+            height: 4px;
+            padding: 8px;
             border-radius: 99px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+            background-clip: content-box;
             border: none;
-            padding: 0;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
+              box-shadow 0.3s ease, transform 0.3s ease;
           }
 
           .channels-bullet.is-active {
-            width: 24px;
+            width: 4px;
             background: var(--color-accent);
+            background-clip: content-box;
+          }
+
+          /* Mobile: small circular dots */
+          @media (max-width: 900px) {
+            .channels-bullets {
+              gap: 0.3rem;
+              margin-block-start: clamp(0.4rem, 1.5vw, 0.65rem);
+            }
+            .channels-bullet,
+            .channels-bullet.is-active {
+              width: 4px;
+              height: 4px;
+              padding: 8px;
+              border-radius: 50%;
+              background-clip: content-box;
+            }
+            .channels-bullet {
+              background: rgba(255, 255, 255, 0.12);
+            }
+            .channels-bullet.is-active {
+              background: var(--color-accent);
+              box-shadow: 0 0 0 1px rgba(28, 115, 4, 0.4);
+              transform: none;
+            }
           }
 
           @media (min-width: 901px) {
@@ -347,7 +446,7 @@ export function Channels() {
 
         <motion.div
           layout
-          className="channels-columns"
+          className="channels-columns channels-scroll-bleed"
           initial={{ opacity: 0, y: 24 }}
           animate={controls}
           variants={{
@@ -372,10 +471,6 @@ export function Channels() {
                 if (window.innerWidth > 900) {
                   setActiveChannelId(item.id);
                 }
-              }}
-              whileHover={{
-                y: -8,
-                transition: { duration: 0.3 },
               }}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? "visible" : "hidden"}
@@ -469,7 +564,10 @@ export function Channels() {
               transition: { duration: 0.6, delay: 0.5 },
             },
           }}
-          style={{ textAlign: "center", marginBlockStart: "3rem" }}
+          style={{
+            textAlign: "center",
+            marginBlockStart: "clamp(1.75rem, 5vw, 3rem)",
+          }}
         >
           <a
             href="#contact"
