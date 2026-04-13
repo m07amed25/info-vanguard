@@ -27,7 +27,7 @@ const channelItems = [
     id: "website",
     title: "Browse with clarity",
     icon: "fa-solid fa-globe",
-    accent: "#0ea5e9",
+    accent: "#1c7304",
     description:
       "Cloud-backed URL intelligence follows your users across the web. Fewer impostor pages and less guesswork for your team.",
     backgroundImage: WEBSITE_BG,
@@ -36,7 +36,7 @@ const channelItems = [
     id: "extensions",
     title: "Protect your apps",
     icon: "fa-solid fa-puzzle-piece",
-    accent: "#8b5cf6",
+    accent: "#1c7304",
     description:
       "Bring checks into the tools people use—browsers, mail, and dev workflows—without breaking flow or forcing another portal.",
     backgroundImage: EXTENSIONS_BG,
