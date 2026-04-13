@@ -27,7 +27,7 @@ const channelItems = [
     id: "website",
     title: "Browse with clarity",
     icon: "fa-solid fa-globe",
-    accent: "#0ea5e9",
+    accent: "#1c7304",
     description:
       "Cloud-backed URL intelligence follows your users across the web. Fewer impostor pages and less guesswork for your team.",
     backgroundImage: WEBSITE_BG,
@@ -36,7 +36,7 @@ const channelItems = [
     id: "extensions",
     title: "Protect your apps",
     icon: "fa-solid fa-puzzle-piece",
-    accent: "#8b5cf6",
+    accent: "#1c7304",
     description:
       "Bring checks into the tools people use—browsers, mail, and dev workflows—without breaking flow or forcing another portal.",
     backgroundImage: EXTENSIONS_BG,
@@ -205,12 +205,7 @@ export function Channels() {
     channelItems.findIndex((c) => c.id === activeChannelId),
   );
 
-  function channelStep(delta: -1 | 1) {
-    const next = Math.max(
-      0,
-      Math.min(channelItems.length - 1, activeIndex + delta),
-    );
-    const id = channelItems[next].id;
+  function goTo(id: (typeof channelItems)[number]["id"]) {
     setActiveChannelId(id);
     columnRefs.current[id]?.scrollIntoView({
       behavior: reduceMotion ? "auto" : "smooth",
@@ -397,52 +392,70 @@ export function Channels() {
             }
           }
 
-          .channels-chevron-row {
-            display: none;
+          .channels-bullets {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-block-start: 0.75rem;
           }
 
+          .channels-bullet {
+            box-sizing: content-box;
+            width: 4px;
+            height: 4px;
+            padding: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            background-clip: content-box;
+            border: none;
+            cursor: pointer;
+            flex-shrink: 0;
+            aspect-ratio: 1/1;
+            min-height: 0;
+            min-width: 0;
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
+              box-shadow 0.3s ease, transform 0.3s ease;
+          }
+
+          .channels-bullet.is-active {
+            width: 4px;
+            height: 4px;
+            background: var(--color-accent);
+            background-clip: content-box;
+          }
+
+          /* Mobile: small circular dots */
           @media (max-width: 900px) {
-            .channels-chevron-row {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              gap: 1rem;
-              margin-block-start: 0.4rem;
+            .channels-bullets {
+              gap: 0.3rem;
+              margin-block-start: clamp(0.4rem, 1.5vw, 0.65rem);
             }
-
-            .channels-chevron-btn {
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              width: 44px;
-              height: 44px;
-              padding: 0;
-              border-radius: 10px;
-              border: 1px solid rgba(255, 255, 255, 0.12);
-              background: rgba(15, 23, 42, 0.85);
-              color: rgba(255, 255, 255, 0.85);
-              cursor: pointer;
-              transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+            .channels-bullet,
+            .channels-bullet.is-active {
+              width: 4px;
+              height: 4px;
+              padding: 12px;
+              border-radius: 50%;
+              background-clip: content-box;
+              flex-shrink: 0;
+              aspect-ratio: 1/1;
+              min-height: 0;
+              min-width: 0;
             }
-
-            .channels-chevron-btn i {
-              font-size: 0.85rem;
+            .channels-bullet {
+              background: rgba(255, 255, 255, 0.12);
             }
-
-            .channels-chevron-btn:hover:not(:disabled) {
-              border-color: var(--color-accent);
-              color: var(--color-accent);
-              background: rgba(28, 115, 4, 0.12);
+            .channels-bullet.is-active {
+              background: var(--color-accent);
+              box-shadow: 0 0 0 1px rgba(28, 115, 4, 0.4);
+              transform: none;
             }
+          }
 
-            .channels-chevron-btn:focus-visible {
-              outline: 2px solid var(--color-accent);
-              outline-offset: 2px;
-            }
-
-            .channels-chevron-btn:disabled {
-              opacity: 0.32;
-              cursor: not-allowed;
+          @media (min-width: 901px) {
+            .channels-bullets {
+              display: none;
             }
           }
         `}</style>
@@ -544,25 +557,16 @@ export function Channels() {
           ))}
         </motion.div>
 
-        <div className="channels-chevron-row">
-          <button
-            type="button"
-            className="channels-chevron-btn"
-            aria-label="Previous channel"
-            disabled={activeIndex <= 0}
-            onClick={() => channelStep(-1)}
-          >
-            <i className="fa-solid fa-chevron-left" aria-hidden />
-          </button>
-          <button
-            type="button"
-            className="channels-chevron-btn"
-            aria-label="Next channel"
-            disabled={activeIndex >= channelItems.length - 1}
-            onClick={() => channelStep(1)}
-          >
-            <i className="fa-solid fa-chevron-right" aria-hidden />
-          </button>
+        <div className="channels-bullets" aria-label="Channels slider">
+          {channelItems.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              className={`channels-bullet ${i === activeIndex ? " is-active" : ""}`}
+              aria-label={`Go to ${item.title}`}
+              onClick={() => goTo(item.id)}
+            />
+          ))}
         </div>
 
         <motion.div
@@ -604,4 +608,3 @@ export function Channels() {
     </section>
   );
 }
-// 1:01:00
