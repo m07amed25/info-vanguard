@@ -454,7 +454,7 @@ export function Testimonials() {
           >
             {[
               {
-                value: 100,
+                value: 50,
                 format: "compact" as const,
                 suffix: "+",
                 label: "Active Users",
@@ -466,7 +466,7 @@ export function Testimonials() {
                 label: "Detection Rate",
               },
               {
-                value: 30,
+                value: 2,
                 format: "number" as const,
                 suffix: "+",
                 label: "Countries",

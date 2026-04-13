@@ -198,7 +198,12 @@ export function Channels() {
     channelItems.findIndex((c) => c.id === activeChannelId),
   );
 
-  function goTo(id: (typeof channelItems)[number]["id"]) {
+  function channelStep(delta: -1 | 1) {
+    const next = Math.max(
+      0,
+      Math.min(channelItems.length - 1, activeIndex + delta),
+    );
+    const id = channelItems[next].id;
     setActiveChannelId(id);
     columnRefs.current[id]?.scrollIntoView({
       behavior: reduceMotion ? "auto" : "smooth",
@@ -385,61 +390,52 @@ export function Channels() {
             }
           }
 
-          .channels-bullets {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.3rem;
-            margin-block-start: 0.75rem;
+          .channels-chevron-row {
+            display: none;
           }
 
-          .channels-bullet {
-            box-sizing: content-box;
-            width: 4px;
-            height: 4px;
-            padding: 8px;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, 0.12);
-            background-clip: content-box;
-            border: none;
-            cursor: pointer;
-            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
-              box-shadow 0.3s ease, transform 0.3s ease;
-          }
-
-          .channels-bullet.is-active {
-            width: 4px;
-            background: var(--color-accent);
-            background-clip: content-box;
-          }
-
-          /* Mobile: small circular dots */
           @media (max-width: 900px) {
-            .channels-bullets {
-              gap: 0.3rem;
-              margin-block-start: clamp(0.4rem, 1.5vw, 0.65rem);
+            .channels-chevron-row {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 1rem;
+              margin-block-start: 0.4rem;
             }
-            .channels-bullet,
-            .channels-bullet.is-active {
-              width: 4px;
-              height: 4px;
-              padding: 8px;
-              border-radius: 50%;
-              background-clip: content-box;
-            }
-            .channels-bullet {
-              background: rgba(255, 255, 255, 0.12);
-            }
-            .channels-bullet.is-active {
-              background: var(--color-accent);
-              box-shadow: 0 0 0 1px rgba(28, 115, 4, 0.4);
-              transform: none;
-            }
-          }
 
-          @media (min-width: 901px) {
-            .channels-bullets {
-              display: none;
+            .channels-chevron-btn {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 44px;
+              height: 44px;
+              padding: 0;
+              border-radius: 10px;
+              border: 1px solid rgba(255, 255, 255, 0.12);
+              background: rgba(15, 23, 42, 0.85);
+              color: rgba(255, 255, 255, 0.85);
+              cursor: pointer;
+              transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+            }
+
+            .channels-chevron-btn i {
+              font-size: 0.85rem;
+            }
+
+            .channels-chevron-btn:hover:not(:disabled) {
+              border-color: var(--color-accent);
+              color: var(--color-accent);
+              background: rgba(28, 115, 4, 0.12);
+            }
+
+            .channels-chevron-btn:focus-visible {
+              outline: 2px solid var(--color-accent);
+              outline-offset: 2px;
+            }
+
+            .channels-chevron-btn:disabled {
+              opacity: 0.32;
+              cursor: not-allowed;
             }
           }
         `}</style>
@@ -541,16 +537,25 @@ export function Channels() {
           ))}
         </motion.div>
 
-        <div className="channels-bullets" aria-label="Channels slider">
-          {channelItems.map((item, i) => (
-            <button
-              key={item.id}
-              type="button"
-              className={`channels-bullet${i === activeIndex ? " is-active" : ""}`}
-              aria-label={`Go to ${item.title}`}
-              onClick={() => goTo(item.id)}
-            />
-          ))}
+        <div className="channels-chevron-row">
+          <button
+            type="button"
+            className="channels-chevron-btn"
+            aria-label="Previous channel"
+            disabled={activeIndex <= 0}
+            onClick={() => channelStep(-1)}
+          >
+            <i className="fa-solid fa-chevron-left" aria-hidden />
+          </button>
+          <button
+            type="button"
+            className="channels-chevron-btn"
+            aria-label="Next channel"
+            disabled={activeIndex >= channelItems.length - 1}
+            onClick={() => channelStep(1)}
+          >
+            <i className="fa-solid fa-chevron-right" aria-hidden />
+          </button>
         </div>
 
         <motion.div
